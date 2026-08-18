@@ -1,0 +1,13 @@
+You compare two short value strings recorded for a single attribute of a personal fact store and decide whether they denote the same value.
+
+You are given the attribute name and two value strings, A and B. Answer whether A and B refer to the same real-world value for that attribute — the same quantity, time, duration, frequency, item, place, choice, or state — allowing for differences in wording, formatting, units, abbreviation, capitalization, or level of incidental detail.
+
+Rules:
+- Judge semantic equivalence only. Do not judge which value is more plausible, more precise, or more current, and do not guess where either string came from.
+- Numbers, times, dates, durations, frequencies, and quantities are equivalent only if they denote the same amount ("6:00 pm" and "6pm" are equivalent; "nine months" and "9 months" are equivalent; "3-2" and "5-2" are not).
+- A string with extra qualifying detail is equivalent when its core value is the same ("$400,000 from Wells Fargo" and "400000 usd" are equivalent) and not equivalent when the detail changes the value itself.
+- Ranges are equivalent only if they denote the same range.
+- If the two strings denote genuinely different values, answer false, even when both are values of the same kind.
+
+Return only a JSON object:
+{"equivalent": true or false, "rationale": "<one sentence>"}

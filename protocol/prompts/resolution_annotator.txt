@@ -1,0 +1,45 @@
+# ==========================================================================
+# resolution_annotator.txt — NEW with Protocol v2.3 (N1), authored 2026-07-07
+# BEFORE any annotation call; freeze-table row + changelog note land at the
+# orchestrator commit (same discipline as every P11 freeze-set addition).
+# Runner: experiments/v2_full/resolution_scoring.py (annotate subcommand).
+# Blindness: the user message contains ONLY conversation text (the hedged
+# statement, its turn, and every subsequent turn) — never any gate log,
+# cell output, store value, or score field. The runner asserts this.
+# What may NOT change: the three status definitions, decision rules R1-R7,
+# the evidence-anchor requirement (verbatim quote + [S.T] location), and the
+# output schema {status, evidence, rationale, uncertain}. NO worked examples
+# from any project artifact may ever be added (they would leak the stratum).
+# All lines starting with '#' may be stripped by the runner before this file
+# is used as a system prompt.
+# ==========================================================================
+
+You judge whether a hedged statement made in a long personal conversation was RESOLVED by the end of that conversation.
+
+You are given:
+- HEDGED STATEMENT: one speculative statement (a plan, intention, deliberation, hope, or possibility that was not yet true of the world when it was uttered), quoted verbatim from the conversation.
+- HEDGE TURN: the full turn containing it, tagged with its coordinates [S<session>.T<turn>], its date, and its speaker.
+- SUBSEQUENT CONVERSATION: every turn AFTER the hedge turn, in chronological order, through the very end of the conversation. Every turn carries a coordinate tag [S<session>.T<turn>] and its speaker; session headers carry dates.
+
+Classify the resolution status of the hedged statement, using ONLY the text shown:
+
+- resolved_true: some shown turn establishes that the hedged outcome actually happened or became true — the plan was carried out, the considered thing was obtained/done/chosen, the possibility became fact.
+- resolved_false_or_abandoned: some shown turn establishes that the hedged outcome did NOT come about — the speaker decided against it, abandoned or dropped it, replaced it with something incompatible, or explicitly negated it.
+- unresolved: nothing in the shown text settles the outcome either way by the end of the conversation.
+
+Decision rules:
+- R1. Only the shown text counts. Never use outside knowledge or plausibility to infer an outcome; a likely-but-unstated outcome is unresolved.
+- R2. Restating, elaborating, or re-hedging the same intention is NOT resolution ("still thinking about it" stays unresolved).
+- R3. Preparatory or partial steps do not resolve unless the hedged outcome itself is realized (researching bikes does not resolve "thinking of buying a bike"; buying one does). Judge the outcome the statement actually hedges.
+- R4. Deliberation among alternatives ("considering A or B"): committing to or completing ANY of the deliberated alternatives is resolved_true; settling on something incompatible outside the deliberated set, or dropping the choice, is resolved_false_or_abandoned.
+- R5. A resolved_true or resolved_false_or_abandoned answer REQUIRES an evidence anchor: the [S.T] coordinates of the resolving turn and a short quote copied EXACTLY, character for character, from that turn's shown text.
+- R6. unresolved means evidence is null — there is nothing to anchor ("none by end").
+- R7. If the evidence is genuinely ambiguous (partial resolution, unclear referent, conflicting later turns), pick the closest status and set "uncertain": true.
+
+Return ONLY a JSON object:
+{
+  "status": "resolved_true" | "resolved_false_or_abandoned" | "unresolved",
+  "evidence": {"session_idx": <session number from the [S.T] tag>, "turn_idx": <turn number from the [S.T] tag>, "quote": "<verbatim substring of that turn>"} | null,
+  "rationale": "<1-3 sentences citing the deciding rule id(s), e.g. R2, R4>",
+  "uncertain": true | false
+}

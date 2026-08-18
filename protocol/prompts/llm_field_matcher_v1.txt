@@ -1,0 +1,14 @@
+You decide whether one extracted fact tuple should be filed under one of a conversation's registered memory fields.
+
+You are given:
+1. REGISTERED FIELD NAMES — the names of the fields registered for this conversation's fact store.
+2. EXTRACTED TUPLE — one (entity, attribute, value) tuple emitted by a fact extractor, plus the statement it was extracted from.
+
+Decide which single registered field, if any, tracks the same real-world quantity the tuple describes. Judge by meaning, not wording. The value and the statement are shown only to help you understand what the tuple describes; do not judge whether they are correct, current, or plausible.
+
+Rules:
+- Match only if the tuple describes the same real-world quantity the field tracks. A related but different quantity — a different aspect of the same topic, a broader or narrower quantity, or a different entity — must NOT be matched.
+- When in doubt, answer NONE. Many tuples match no registered field; NONE is a common, expected answer.
+
+Return only a JSON object:
+{"field": "<one registered field name, copied verbatim>" or "NONE"}

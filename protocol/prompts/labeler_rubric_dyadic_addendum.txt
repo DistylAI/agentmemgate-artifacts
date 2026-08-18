@@ -1,0 +1,66 @@
+# Dyadic addendum to the labeler rubric (LoCoMo items ONLY)
+# Attached AFTER labeler_rubric.txt for dyadic (human-human) items; the frozen
+# monologue rubric is untouched (V2-P10). Source: research/dyadic_rubric_gloss.md.
+
+# Dyadic Rubric Gloss — Rule (e) for LoCoMo Items (Protocol v2 Addendum)
+
+**Author:** Dyadic prompt author (protocol-v2 design swarm) · **Date:** 2026-07-03
+**Status:** Authored now, freezes with protocol v2 (V2-P7/V2-P10: sha256 row in `pilot/prompts/README.md`-style freeze accounting + `research/protocol_changelog.md` entry at the v2 freeze commit). Nothing here edits `pilot/prompts/labeler_rubric.txt` — its v1.1 sha256 (`43698011…`) stands byte-for-byte.
+**Companion artifacts:** `pilot/prompts/extractor_dyadic.txt`, `pilot/prompts/extractor_zep_dyadic.txt` (the V2-P2 single-pass dyadic extraction prompts), `pilot/tests/test_dyadic_diff.py` (the V2-P5 diff-of-diffs identity check).
+
+---
+
+## 1. Why a gloss and why rule (e)
+
+LoCoMo is peer-to-peer human dialog: there is no assistant, and both speakers carry tracked state in their own subject-keyed stores (V2-P2: 20 speaker-stores, one extraction pass per turn writing to both). Every rubric rule except (e) already reads correctly in that setting — the taxonomy is entity-relative (rule (g)) and source-hand-agnostic (rule (c)) by design. Rule (e) alone is worded against the user/assistant frame ("a stored belief the assistant voiced", "the assistant's general world knowledge"), which has **no referent** on LoCoMo. Without a gloss, labelers facing a dyadic correction item must improvise the mapping; with one, the mapping is pinned before any gold label exists.
+
+## 2. Attachment mechanics (frozen rubric untouched)
+
+- The v2 labeling runner appends §3's addendum block **after** the rubric body, **for LoCoMo items only**. LongMemEval items continue to receive the rubric alone, byte-identical to the pilot — so all pilot calibration results (Test 0: 48/50 construction agreement, natural κ = 1.0) remain the valid anchor for the LME stream.
+- The rubric file's bytes are never modified; the runner concatenates at call time (same pattern as `label.py`'s existing comment-stripping: transformation at load, file untouched).
+- The addendum applies to **all three labeler calls and the escalation adjudicator** for LoCoMo items (the adjudicator's rule-citing rationale may cite "(e-dyadic)" alongside E1–E3).
+- The classifier's short prompt (`classifier_short.txt`) is **not** touched and gains no gloss: the §2.3 prompt-asymmetry firewall (no rules, no examples on the classifier side) is preserved unchanged on both benchmarks.
+- **Calibration gate (V2-P5, binding):** before any preregistered v2 run, a Test-0-style LoCoMo calibration — **50 injected + 25 natural items** through the full pipeline *with this addendum attached* — must pass the same gates as pilot Test 0: pipeline-vs-construction agreement ≥ 0.9 on injected items; natural 3-labeler Fleiss κ ≥ 0.6 reported (same diagnose-fix-rerun loop on failure). This gloss has no gold-producing authority until that gate passes.
+
+## 3. The addendum text (normative; this exact block is what v2 appends)
+
+> **ADDENDUM — dyadic conversations (LoCoMo items only): reading rule (e) without an assistant.**
+>
+> This conversation is between two named people; there is no assistant, and BOTH people's tracked state exists (each person has their own record). Rule (e)'s boundary is unchanged — a correction must target TRACKED STATE with an addressable prior representation (E1) — but the addressable-representation set reads as follows. For person X's tracked state, an addressable prior representation is: (i) X's own prior statement about it; (ii) the other speaker's voiced belief about it; or (iii) a stored value for X's key, when one is shown with the item.
+>
+> Cases:
+> 1. A speaker corrects their OWN prior statement => EXPLICIT_CORRECTION, exactly as in the base rule.
+> 2. A speaker corrects the other speaker's voiced belief about the SPEAKER'S OWN tracked state ("No, I go on Tuesdays, not Mondays") => EXPLICIT_CORRECTION — the other speaker's voiced belief plays the role the base rule gives to "a stored belief the assistant voiced".
+> 3. A speaker corrects the other speaker's statement about the OTHER SPEAKER'S own tracked state ("You said you adopted him in June — it was July") => EXPLICIT_CORRECTION relative to the other speaker's entity (the taxonomy is entity-relative, rule (g)). The correction reaches that record second-hand; per rule (c), assertion force — not source hand — sets the class, and provenance records secondhand=true.
+> 4. A speaker denies something about themselves that they never asserted and the record never held (e.g. answering the other speaker's question with "Actually I've never been fishing") => a negative observed fact, OTHER — the same branch as denying an assistant hallucination in the base rule. If the record DOES hold the denied fact (for example, written earlier from the other speaker's secondhand claim), the same utterance is EXPLICIT_CORRECTION.
+> 5. Correcting the other speaker's GENERAL WORLD KNOWLEDGE — a claim about the world that is not either person's tracked state => OTHER, exactly as the base rule's train-fare case.
+> 6. Marker words remain neither necessary nor sufficient (E2). In this casual register, "actually", "no way", "oh wait", and apology phrases are overwhelmingly discourse markers or new-information turns, not corrections.
+
+## 4. Grounding notes (why each case is pinned this way)
+
+| Case | Anchor |
+|---|---|
+| 1–2 | Direct transposition of rule (e)'s two admitted target types; the partner-voiced-belief reading is the one `locomo_analysis.md` §3.1 names for the dyadic gloss ("the speaker's own prior statement or the partner's voiced belief about the speaker's tracked state"). |
+| 3 | Rule (g) makes the taxonomy per-entity; rule (c) makes assertion force govern second-hand assertions; E1's addressable target (the partner's own prior statement) is present. The `secondhand=true` provenance matches the dyadic extractor prompts' new field, so labeler semantics and extractor semantics agree on what "second-hand" means. |
+| 4 | Mirrors rule (e)'s hallucination-denial branch verbatim. It decides the harvest's single LoCoMo correction-adjacent row — conv-44 D17:2, Audrey, "Actually I've never been fishing." (pool tag `correction`, quality borderline) — as OTHER (negative observed fact answering a partner question), consistent with `locomo_analysis.md` §2.3's zero-clean-corrections finding and `full_experiment_critique.md` §2.5. |
+| 5 | Rule (e)'s existing boundary, restated with no assistant. |
+| 6 | E2 unchanged; the register warning is empirical — LoCoMo's 21 correction-family cue hits contain zero genuine corrections (`locomo_analysis.md` §2.3/§4). |
+
+## 5. What this gloss does NOT change
+
+- No class definition, no precedence rule, no decision rule S1–S3/C1–C3/E1–E3, no edge rule (a)–(g) semantics. Rules (c) and (g) already cover the dyadic case; only rule (e)'s assistant-worded target list needed a reading.
+- The labeler output schema `{class, rationale, edge_case_flags, uncertain}` and the `edge_case_flags` vocabulary are unchanged — dyadic rule-(e) items flag `(e)` as before.
+- The labeler information set (§2.1) is unchanged: item = statement tuple + up to 2 preceding turns + stored value when one exists. For LoCoMo the turn context lines carry speaker names instead of user/assistant roles; `item_packaging.txt` placeholders are untouched (the names live inside the turn text).
+- The §2.3 firewall: the classifier never sees this gloss (or any rule text), on either benchmark.
+
+## 6. Consequences for the v2 calibration set (feeds the V2-P5 gate)
+
+- LoCoMo supplies **zero clean natural corrections** (`locomo_analysis.md` §2.3), so rule-(e) behavior on LoCoMo is testable **only through injected items**: the 50-item injected calibration slice must include dyadic corrections of both admitted target types (case 1 self-correction; case 2 partner-belief correction) plus case-4 negative-denial near-misses as the adversarial contrast — otherwise the gloss's central distinctions go uncalibrated.
+- The 25 natural items should be drawn from the **merged** LoCoMo natural pool (`research/locomo_candidates.jsonl` ∪ the 109 LoCoMo rows of `research/natural_candidates_full.jsonl`), which per `full_experiment_critique.md` M2 must first be deduplicated into one canonical pool; the natural slice will necessarily be correction-free and covers the gloss only through case-4/case-6 items (e.g. conv-44 D17:2) and ordinary (c)/(g) traffic.
+- Per V2-P9, calibration outcomes report natural and injected strata separately, as in pilot Test 0.
+
+## 7. Open interactions logged for the protocol author
+
+1. **Secondhand writes and case 4's store branch.** Whether ungated arms write partner-claims (secondhand=true tuples about the other speaker) into the target store determines how often case 4's "record DOES hold it" branch can arise. The dyadic extractor prompts record such tuples (per V2-P2); commit-side handling must be identical across the commit axis per `full_experiment_critique.md` M6 — this gloss only fixes the *labeling* semantics either way.
+2. **Cat-5 misattribution scoring (V2-P4)** — "correct = focal speaker's store LACKS the key" — is consistent with this gloss: partner-facts are subject-keyed to the partner, so a correctly-behaving store never holds the trap key under the focal entity, with or without secondhand writes.
+3. The dyadic renderer must present image turns as bracketed photo notes (`[shares photo: <blip_caption>]`) to match the caption rule in the dyadic prompts, and must name the current speaker in the current-turn marker (the dyadic analog of `extract.py`'s `_CURRENT_TURN_MARKER`); `parse_tuples` needs a dyadic variant that validates the added boolean `secondhand` field.

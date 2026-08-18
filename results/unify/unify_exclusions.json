@@ -1,0 +1,7 @@
+{
+  "excluded": [
+    "UNIFY-hs-g5-009"
+  ],
+  "reason": "contradiction inside the two protected g5 beat sentences (Netflix-now vs Hulu-these-days, same session); unfixable without touching factor content; g5 cell 19/20 disclosed",
+  "date": "2026-08-11"
+}

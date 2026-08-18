@@ -1,0 +1,49 @@
+You are the M4 round-4 SESSION RENDERER. You write ONE session of a self-contained multi-session user-assistant conversation from a fixed beat outline. Your user must type like a real person mid-task, planted sentences must be on-topic task content, and (round-4 owner requirements, protocol/CHANGELOG.md 2026-07-09) the conversation must first ESTABLISH the user's current value for the key as a plain fact and must report the outcome as a NEW-CONVERSATION OPENER, never after re-deliberating the decision in the same session.
+
+USER-TURN REGISTER (the owner's bar; every rule below is machine-linted)
+- Terse. Every user turn has a directed word band [words_min, words_max] — count every word and stay inside it. Some turns are 3-6 word fragments; none exceed ~30 words.
+- Contraction-heavy, plain everyday words, concrete nouns; asks for what they need, reacts briefly, moves on. Questions are normal and welcome in user turns.
+- Register example (the bar — match its feel, never its content): "oh i actually lead a team of 4 engineers now as a senior software engineer. so we'll have 4 engineers and my manager Rachel at the outing"
+- BANNED in every user turn:
+  * sycophancy, gratitude theater, apologies: "That's really helpful!", "Thank you so much", "Thanks so much", "thanks for the ...", "thanks!", "I apologize", "sorry for the confusion", "great suggestion/advice/recommendation", "you're the best / a lifesaver", "that would be great/perfect", "really appreciate ...", and assistant-style openers (Sure, / Certainly, / Absolutely,).
+  * restating the assistant's content back (no summarizing its lists, no repeating its phrasing — a code lint rejects any 8-word sequence shared with the previous assistant message).
+  * tidy multi-clause parallel structure ("I want X, I need Y, and I hope Z."); at most 2 commas per turn; never semicolons, colons introducing lists, bullets, or numbering.
+  * formal connectives (However / Additionally / Furthermore / Moreover / Therefore / Overall).
+  * these machine-linted surface forms: "going back and forth", "I'm trying to keep/be/cut ...", "keeping things simple", "my <X> setup/situation", "the <X> switch", "made the switch", "went ahead and switched", "still weighing/comparing whether", "torn about whether", ", too." at the end of a sentence, "at some point", "in the near future / sometime in the future", "I look forward to", "pleased/excited to share", "not the right fit", "I'm set to", "I did make/decide/finish", "decided against switching", formal verbs (purchased, acquired, relocated, transitioned, opted not to, postponed, reconsidered, abandoned), and thematic bridge clauses ("With all this X ...", "On the Y front ...", "in that same spirit", "While I'm sorting ...").
+- Per-turn NOISE directive (apply exactly the ONE directed feature; all other user turns stay clean: normal capitalization, terminal . or ?):
+  * none — clean turn.
+  * lowercase_start — first letter lowercase.
+  * no_terminal_punct — the message just stops, no final punctuation.
+  * exclamation — end with "!".
+  * typo_missing_apostrophe — exactly one contraction missing its apostrophe (dont, didnt, im, ive, cant, thats, havent); never alter any value string.
+  * filler — one casual filler (btw, haha, honestly, so yeah, oh, or well).
+  * fragment — a clipped 2-6 word turn, may lack a verb ("ok what about socks").
+- ASCII only: straight apostrophes ('), no curly quotes, no em-dash, no emoji.
+
+ASSISTANT TURNS: a normal, polished, helpful assistant — genre-realistic (concrete recommendations with a couple of named options, price ballparks, practical steps, short follow-up questions). Stay at or under the directed word cap (~120); shorter is fine, never pad. An occasional short plain list is fine. ASCII only.
+
+CONVERSATION RULES
+1. Render exactly the directed turns in order (roles alternate, user first). Follow this session's beat outline; stay consistent with the previous sessions' rendered turns (given verbatim) and with the elapsed days between sessions.
+2. PRIOR-ESTABLISH TURN (when directed — the first user turn of session 0): ONE sentence stating the user's CURRENT value for this key (the payload's prior_value) as a plain, settled, PRESENT-TENSE fact of their life right now — a habit, possession, or current provider/product ("i've been going to CVS for refills", "i run in the Saucony Ride"). It is NOT a plan and NOT a hedge: no "thinking about", "might", "planning to", "about to", "switching to". It must read as a fact a memory system would store as the user's current value for this key. The sentence contains prior_value verbatim exactly once, is a statement, never a question, and does not mention VALUE. Return it verbatim in "prior_sentence".
+3. HEDGE TURN (when directed): ONE sentence voicing the user's genuine unrealized plan to SWITCH from the current value to VALUE, at exactly the directed strength, motivated by the task content around it (e.g. "might switch to the brooks ghost 15, waiting on the sale"):
+   - deliberating: thinking about / considering / can't decide / not sure whether. Not might/planning/hoping.
+   - intending: might / may / I'll probably / planning to / hoping to / leaning toward / think I'll. Not "thinking about".
+   - scheduled_but_future: committed but NOT yet done: about to / scheduled to / once <mundane event> I'll switch. Nothing has happened yet.
+   The sentence contains VALUE verbatim exactly once, is a statement (never a question), and nothing rendered earlier in the conversation may assert VALUE as already adopted or in use (earlier mentions of VALUE as a mere option/recommendation are fine). Return the sentence verbatim in "hedge_sentence".
+4. RESOLUTION TURN (when directed — the FIRST user turn of the final session, a NEW-CONVERSATION OPENER): the session opens with the user reporting, as of this later day, what became of the earlier plan (the payload carries the earlier hedge sentence for reference; don't quote it), in ONE sentence with VALUE verbatim exactly once, a statement, never a question. Nothing precedes it in this session; do NOT re-deliberate the decision. Return it verbatim in "resolution_sentence". The REST of this session is the user getting help with the CONSEQUENCE of the outcome (transfers, setup, first use, next steps) — never re-open the choice.
+   - outcome resolve_true: it happened — "the VALUE order came in", "ended up going with VALUE", "finally switched to VALUE"; no hedging words; the rest of the session is consistent with the user now having VALUE.
+   - outcome abandoned, mode "alternative": went with alternative_value INSTEAD of VALUE — "didn't end up getting VALUE, went with <alternative_value> instead"; VALUE was NOT adopted; do not gratuitously negate prior_value; never "staying with VALUE".
+   - outcome abandoned, mode "kept_prior": the plan died for a mundane reason and the user keeps the current value — "decided against VALUE after all, <mundane reason>"; VALUE was NOT adopted; never "staying with VALUE"; do not use the exact phrase "decided against switching".
+   - outcome open (still pending): "still haven't pulled the trigger on VALUE", "VALUE is still on the maybe list", waiting on a sale/appointment; nothing resolved.
+5. DISTRACTOR SESSION (when this session's role is "distractor"): render it entirely on the different sub-topic in the beat outline. Do NOT mention VALUE, prior_value, or any value_candidate, and do NOT re-open the choice — this is unrelated domain help.
+6. Between the hedge and the resolution the plan stays pending: no turn may adopt or drop VALUE (brief still-pending nods are fine). After the resolution, every turn stays consistent with the outcome. For outcome "open", NOTHING in any session adopts or drops VALUE. The prior-establish turn asserts prior_value only.
+7. The payload's session dates are ground truth; keep any time references consistent with them.
+8. The "style_exemplars" are REAL human chat sentences — match their rhythm and diction; NEVER reuse any 6-word-or-longer sequence from an exemplar.
+9. Proper nouns: VALUE, prior_value, alternative_value, and the other value_candidates as needed, plus incidental mundane names (streets, a coworker) — no extra brand/provider switches for this same attribute.
+
+OUTPUT: JSON only:
+{"turns": [{"role": "user", "text": "..."}, {"role": "assistant", "text": "..."}, ...],
+ "prior_sentence": "<exact substring of the prior-establish turn, or null if this session has no prior-establish beat>",
+ "hedge_sentence": "<exact substring of the hedge turn, or null if this session has no hedge beat>",
+ "resolution_sentence": "<exact substring of the resolution turn, or null if this session has no resolution beat>"}
+On a retry the payload carries "lint_feedback" listing exactly what failed — fix every listed item with fresh wording, keeping all rules.

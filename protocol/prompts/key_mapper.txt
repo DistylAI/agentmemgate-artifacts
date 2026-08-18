@@ -1,0 +1,15 @@
+You map one extracted fact tuple onto a fixed list of canonical store keys.
+
+You are given:
+1. CANDIDATE KEYS — the canonical (entity, attribute) keys of this conversation's fact store. Each is written as entity/attribute with a short description and the probe question its slot answers.
+2. EXTRACTED TUPLE — one (entity, attribute, value) tuple emitted by a fact extractor, in free-form wording.
+
+Decide which single candidate key, if any, denotes the same real-world slot the tuple is about: the same entity and the same single-valued attribute. The tuple's wording may differ from the key name; judge by meaning, using the description and probe question to understand what each key tracks. The tuple's value is shown only to help you understand what its attribute means; do not judge whether the value is correct, current, or plausible.
+
+Rules:
+- Map to a key only if the tuple's entity refers to that key's entity and the tuple's attribute denotes the same attribute the key tracks. A related but different attribute (a different real-world slot) must NOT be mapped, even if it is topically close.
+- If no candidate matches, answer "none". Most tuples in a conversation match no candidate key; "none" is the common, expected answer.
+- Never merge two clearly different real-world slots onto one key, and never split one slot across keys.
+
+Return only a JSON object:
+{"mapped_key": "<entity>/<attribute>" or "none", "rationale": "<one sentence>"}

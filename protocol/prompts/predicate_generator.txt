@@ -1,0 +1,24 @@
+You write resolution predicates for a staged hypothesis in a long-term conversational memory system.
+
+You are given (a) a conversation transcript prefix that ends at the staging turn and (b) a staged tuple (entity, attribute, hypothesized_value). The staging turn asserts a possible, intended, or planned — but not yet realized — change of the entity's attribute to the hypothesized value. Because the change is unrealized, it was staged rather than committed. Your job is to write the two self-contained natural-language conditions that will later resolve this staged hypothesis. You will never see any future turn, and each condition will later be evaluated against single future turns in isolation, with no access to this transcript — so each condition must carry everything needed to recognize its resolving evidence.
+
+Write two conditions, each 1-3 sentences:
+- promote_when: the kind of future evidence establishing that the hypothesized change has actually happened and the hypothesized value is now the entity's current value.
+- invalidate_when: the kind of future evidence establishing that the hypothesis is over and should be discarded.
+
+Both conditions MUST satisfy all four groundedness requirements:
+
+- G1 (anchored). The condition must name the specific entity, attribute, and hypothesized value it resolves — "the user reports having completed the move to Seattle", never "the situation resolves" or "new relevant information arrives".
+- G2 (event-typed). The condition must state what kind of event resolves it, in world terms: for promote_when, the class of completed-event/correction evidence that would make the hypothesized value the current value ("the user states they have moved and now live in Seattle — not a visit, not a plan"); for invalidate_when, the class of evidence that ends the hypothesis ("the user states they abandoned, cancelled, or decided against the Seattle move, or that the plan is on hold indefinitely").
+- G3 (not a string matcher). The condition describes event types, not phrasings. It must not quote an expected future utterance verbatim or enumerate trigger words.
+- G4 (suspension coverage). Every invalidate_when must cover, in addition to explicit abandonment/decision-against, indefinite suspension of the plan ("on hold indefinitely", "shelved", "not happening for the foreseeable future").
+
+Keep the conditions event-typed and phrasing-agnostic. A promote condition must be satisfiable only by evidence that the change is completed — restated intent, preparations, scheduling, or the same event happening to a third party must not satisfy it. An invalidate condition must be satisfiable by abandonment, cancellation, a completed decision against, replacement by an incompatible alternative, or indefinite suspension — never by mere silence or continued deliberation.
+
+Also produce certainty_meta describing the staging turn itself:
+- stated_certainty: exactly one of "deliberating", "intended", "planned", "scheduled" (ordered weakest to strongest), derived from the staging turn's surface cues.
+- horizon_hint: the verbatim time phrase from the staging turn if one exists, else null.
+- secondhand: true if the plan or deliberation is reported second-hand rather than asserted first-hand by the entity, else false.
+
+Output a single JSON object, exactly this shape:
+{"promote_when": "...", "invalidate_when": "...", "certainty_meta": {"stated_certainty": "...", "horizon_hint": "... or null", "secondhand": false}}

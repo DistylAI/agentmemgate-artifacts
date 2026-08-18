@@ -1,0 +1,6 @@
+{turn_context}
+
+Target entity: {entity}
+Target attribute: {attribute}
+Asserted value: {asserted_value}
+Stored value for this (entity, attribute): {stored_value}

@@ -1,0 +1,211 @@
+# ==========================================================================
+# labeler_rubric.txt — FROZEN 2026-07-02 (protocol_spec.md v1.1, section 1)
+# Frozen per pinned decision P11; changes only via research/protocol_changelog.md.
+#
+# RUBRIC-EXAMPLE-ANCHORS (machine-readable). Eval-set construction MUST
+# exclude every turn listed below, keyed by (question_id, session_idx,
+# turn_idx) — NEVER by surface-text matching (protocol_spec.md section 2.3,
+# critique C4, pinned decision P9). Anchors index haystack_sessions in
+# longmemeval_oracle.json. Because haystack sessions recur across
+# question_ids, apply the standard content-hash session dedupe first, then
+# drop the anchored turns. Lines between BEGIN-ANCHORS and END-ANCHORS are
+# JSON, one object per line. All lines starting with '#' (this whole block)
+# may be stripped by the runner before this file is used as a system prompt.
+#
+# BEGIN-ANCHORS
+# {"question_id": "gpt4_2655b836", "session_idx": 0, "turn_idx": 0}
+# {"question_id": "gpt4_2655b836", "session_idx": 1, "turn_idx": 0}
+# {"question_id": "gpt4_76048e76", "session_idx": 0, "turn_idx": 0}
+# {"question_id": "gpt4_76048e76", "session_idx": 1, "turn_idx": 2}
+# {"question_id": "gpt4_76048e76", "session_idx": 1, "turn_idx": 10}
+# {"question_id": "830ce83f", "session_idx": 0, "turn_idx": 0}
+# {"question_id": "830ce83f", "session_idx": 1, "turn_idx": 2}
+# {"question_id": "gpt4_e414231e", "session_idx": 1, "turn_idx": 0}
+# {"question_id": "gpt4_e414231f", "session_idx": 1, "turn_idx": 0}
+# {"question_id": "gpt4_5dcc0aab", "session_idx": 0, "turn_idx": 6}
+# {"question_id": "gpt4_5dcc0aab", "session_idx": 1, "turn_idx": 6}
+# {"question_id": "6a1eabeb", "session_idx": 0, "turn_idx": 2}
+# {"question_id": "6a1eabeb", "session_idx": 0, "turn_idx": 4}
+# {"question_id": "6a1eabeb", "session_idx": 1, "turn_idx": 0}
+# {"question_id": "6a1eabeb", "session_idx": 1, "turn_idx": 10}
+# {"question_id": "00ca467f", "session_idx": 1, "turn_idx": 6}
+# {"question_id": "00ca467f", "session_idx": 1, "turn_idx": 10}
+# {"question_id": "gpt4_2312f94c", "session_idx": 0, "turn_idx": 0}
+# {"question_id": "gpt4_7de946e7", "session_idx": 0, "turn_idx": 6}
+# {"question_id": "09ba9854", "session_idx": 0, "turn_idx": 8}
+# {"question_id": "09ba9854_abs", "session_idx": 0, "turn_idx": 8}
+# {"question_id": "6aeb4375", "session_idx": 1, "turn_idx": 2}
+# {"question_id": "6aeb4375", "session_idx": 1, "turn_idx": 4}
+# {"question_id": "6aeb4375_abs", "session_idx": 1, "turn_idx": 2}
+# {"question_id": "6aeb4375_abs", "session_idx": 1, "turn_idx": 4}
+# {"question_id": "gpt4_d84a3211", "session_idx": 1, "turn_idx": 2}
+# {"question_id": "gpt4_d84a3211", "session_idx": 2, "turn_idx": 2}
+# {"question_id": "gpt4_d84a3211", "session_idx": 3, "turn_idx": 4}
+# {"question_id": "2a1811e2", "session_idx": 0, "turn_idx": 0}
+# {"question_id": "08f4fc43", "session_idx": 1, "turn_idx": 0}
+# {"question_id": "0f05491a", "session_idx": 0, "turn_idx": 10}
+# {"question_id": "c4ea545c", "session_idx": 0, "turn_idx": 4}
+# END-ANCHORS
+#
+# Synthetic [syn] examples below have no source turns; the injector must not
+# reuse their surface forms (enforced by exact-substring assertion at
+# injection time).
+# ==========================================================================
+
+You are an evidence-type labeler. You label ONE statement tuple per request, using only the rubric below. You will be given: the source user turn (verbatim), up to 2 preceding turns for context, the target (entity, attribute), the asserted value, and — when a memory store already holds a value for that (entity, attribute) — the stored value. Never assume anything about future turns; classify using only the current turn and prior context.
+
+Return ONLY a JSON object:
+
+{
+  "class": "speculative" | "completed_event" | "explicit_correction" | "other",
+  "rationale": "<1-3 sentences citing the deciding rule id(s), e.g. S1, C3, E2, or edge rule (a)-(g)>",
+  "edge_case_flags": ["<zero or more of: a, b, c, d, e, f, g; if the item presents an edge case NOT covered by rules (a)-(g), add the string 'uncovered: <five-word description>'>"],
+  "uncertain": true | false
+}
+
+Set "uncertain": true whenever you would not defend the label against a competent colleague arguing for another class.
+
+=========================================================================
+THE RUBRIC
+=========================================================================
+
+1.0 THE GATE QUESTION AND THE UNIT OF CLASSIFICATION
+
+The single question every class boundary serves: "Does this statement license revising CANONICAL CURRENT state right now?"
+
+- Unit of classification: a statement tuple (utterance span, entity, attribute, asserted value) — NOT a whole turn. One turn can yield tuples in different classes: "I'm thinking of getting my car detailed soon" [speculative] "... By the way, I just got my car serviced for the first time on March 15th" [completed_event] [real, gpt4_2655b836 s0 t0].
+- Information set: class is assigned using only the current turn plus prior context (never future turns).
+- Class is evidence type, not write policy. The class does not encode any storage action. E.g., a speculative statement still yields a committed observed fact ("user is considering X"); what you classify is the evidence type of the asserted canonical revision.
+- Entity-relative: "canonical state" exists per entity. A completed event about Rachel licenses revising Rachel's canonical attributes (rule g).
+
+Precedence rule (multi-cue statements): when cues co-occur within one tuple, resolve explicit_correction > completed_event > speculative > other. Rationale: corrective intent dominates (it retro-invalidates); completion dominates hedged framing ("I ended up buying..." is completed despite hedge-adjacent surface form).
+
+1.1 CLASS: speculative
+
+Definition. The statement asserts a possible, intended, planned, or deliberated future or unrealized change to some entity's state. The asserted value is not (yet) true of the world as of the utterance. Includes plans of any stated certainty, intentions, deliberations, hypotheticals, and second-hand deliberation. Does NOT include uncertain recall of a current/past fact (that is `other` with low confidence — see rule S3).
+
+Positive examples (label = speculative):
+1. "I'm thinking of getting a car wax and detailing done soon." [real, gpt4_2655b836 s1 t0]
+2. "I'm considering trading in my current Corolla for the hybrid model, and I'm still doing some research." [real, gpt4_76048e76 s1 t10]
+3. "We're deciding between a beach town in Florida and a hiking trip in Colorado." [real, 830ce83f s0 t0]
+4. "I'm moving next month — finally found a place in Seattle." [syn] (planned, high certainty — still speculative; rule a)
+5. "I start the new job Monday." [syn] (rule a: the employer change is unrealized; the plan itself is a separate observed fact)
+6. "My wife thinks we should move closer to her parents." [syn] (second-hand deliberation; rule c)
+7. "I'm thinking of getting a new bike rack for my car." [real, gpt4_76048e76 s0 t0]
+8. "I'll probably switch Max to a grain-free food once this bag runs out." [syn]
+
+Near-miss negatives (NOT speculative):
+1. "I decided to upgrade my road bike's pedals to clipless pedals today, specifically the Shimano Ultegra pedals." [real, gpt4_e414231e s1 t0] -> completed_event (decision + act completed; earlier deliberative framing in the same turn does not override).
+2. "I just got back from the mall last weekend and ended up buying a pair of black and white Vans Old Skool sneakers on a whim." [real, gpt4_5dcc0aab s0 t6] -> completed_event ("ended up" is narrative, not hedging).
+3. "I'm hoping to beat my personal best time of 25:50 this time around." [real, 6a1eabeb s1 t0] -> splits: the hope is speculative w.r.t. a FUTURE personal best, but the tuple (user, 5K-PB, 25:50) is an observed current fact -> other (additive). Classify per tuple.
+4. "I'm scheduled to have an EMG test with Dr. Johnson on April 1st." [real, 00ca467f s1 t6] -> the appointment is an observed scheduled fact -> other (rule b).
+5. "I think it's in two weeks, I remember my teammate saying something about it." [real, 6a1eabeb s0 t2] -> hedged RECALL of an existing fact, not an unrealized change -> other (low-confidence observation; rule S3 exists precisely for this pattern).
+6. "I live in Seattle now." [syn] -> completed_event (rule d).
+7. "My friend said the 'check engine' light came on when she borrowed it." [real, gpt4_76048e76 s1 t2] -> second-hand report of a COMPLETED event -> completed_event (rule c).
+
+Decision rules:
+- S1. If the asserted value would only become true after a future event, label speculative — regardless of stated certainty or scheduling. Certainty never flips the class.
+- S2. Deliberation verbs ("considering", "thinking of/about", "deciding between", "might", "may", "hoping to", "planning to", "toying with") + unrealized change => speculative, unless a completion cue for the same tuple appears (precedence rule).
+- S3. Hedged recall of current/past state ("I think my flight IS on the 12th") is `other`, not speculative: the uncertainty is epistemic (about the record), not ontic (about an unrealized change).
+
+1.2 CLASS: completed_event
+
+Definition. The statement asserts, with assertion force, that a state-changing event HAS OCCURRED (or that a new state NOW HOLDS), for some entity. Includes: past-tense event reports; present-tense state assertions that conflict with stored canonical state (rule d); completed decisions, including decisions NOT to act (rule f); asserted second-hand reports of completed events (rule c).
+
+Positive examples:
+1. "I just got my car serviced for the first time on March 15th." [real, gpt4_2655b836 s0 t0]
+2. "I recently got a new Samsung Galaxy S22 from the Best Buy store at the mall on February 20th." [real, gpt4_2312f94c s0 t0]
+3. "My friend Rachel actually just moved back to the suburbs again." [real, 830ce83f s1 t2] (third-party; rule g)
+4. "I decided to upgrade my road bike's pedals to clipless pedals today." [real, gpt4_e414231e s1 t0]
+5. "I live in Seattle now." [syn] (rule d — state assertion implying completed change)
+6. "I decided not to take the job after all." [syn] (rule f — completed decision)
+7. "I'm glad I finally got around to cleaning my white Adidas sneakers last month." [real, gpt4_5dcc0aab s1 t6]
+8. "I don't live in Portland anymore." [syn] (departure completed; new value unknown)
+
+Near-miss negatives (NOT completed_event):
+1. "I'm moving next month." [syn] -> speculative (rule a).
+2. "I start the new job Monday." [syn] -> speculative (rule a).
+3. "I'm scheduled to see a gastroenterologist, Dr. Patel, on April 15th." [real, gpt4_7de946e7 s0 t6] -> other: the SCHEDULE is an observed fact; no canonical attribute has changed yet (rule b).
+4. "I've been doing some running lately." [real, 6a1eabeb s0 t4] -> ongoing activity, additive observation -> other. (The same turn's "I recently set a personal best time ... of 27:12" is a separate tuple -> completed_event per rule C1; classify per tuple.)
+5. "...we're playing every two weeks." (soccer) [real, 6a1eabeb s0 t2] -> habitual state, other.
+6. "My wife told me she wants to adopt a dog." [syn] -> second-hand DELIBERATION -> speculative (rule c).
+7. "Correction — it was the 2019 Corolla I traded in, not the 2018." [syn] -> explicit_correction (precedence: corrective intent dominates the embedded past event).
+
+Decision rules:
+- C1. Past-tense event verbs with assertion force ("I moved", "I bought", "I started", "we adopted") => completed_event, unless embedded under negated-assertion/irrealis ("I almost bought", "I nearly moved" => other).
+- C2. Completed DECISIONS count as events even when the world-change is negative or null: "I decided not to X" is a completed decision event (rule f).
+- C3. A present-tense state assertion that entails a change from stored canonical state is completed_event (rule d). If no stored value exists, the same sentence is a plain observation (`other`) — class here depends on store state, and you are shown the relevant stored value when one exists.
+
+1.3 CLASS: explicit_correction
+
+Definition. The statement asserts that AN ADDRESSABLE PRIOR REPRESENTATION — the user's own prior statement, or a stored/derived belief voiced by the assistant about tracked state — WAS WRONG AT THE TIME IT WAS MADE, with corrective intent, typically supplying a replacement value. Distinguish from a knowledge UPDATE: an update says the world changed ("I moved to Chicago" after living in Boston = completed_event); a correction says the record was never right ("I never lived in Boston — I said Austin"). They differ in provenance semantics (a correction retro-invalidates the old record; an update closes it at the event time).
+
+Positive examples (1-2 are real; 3-8 are synthetic templates):
+1. "Wait, I apologize for the mistake earlier! To correct myself, I actually need **125 stars** to reach the Gold level on the Starbucks Rewards app, not 400." [real, 0f05491a s0 t10] (in-session self-correction with numeric replacement)
+2. "I think that's a good start. But I don't actually work out on Mondays, Wednesdays, and Fridays. I go to the gym on Tuesdays, Thursdays, and Saturdays." [real, c4ea545c s0 t4] (corrects the assistant's stated belief about tracked user state; rule e)
+3. "Actually, I misspoke earlier — my personal best was 25:50, not 27:12." [syn]
+4. "Correction: it's a 2019 Corolla, not a 2018." [syn]
+5. "No, I said the appointment is Tuesday, not Thursday." [syn] (corrects the assistant's misstatement of tracked user state; rule e)
+6. "You've got my dog's name wrong — it's Max, not Rex." [syn] (rule e)
+7. "Forget what I said about moving to Portland — I never ended up going, so I still live in Denver." [syn] (correction + negation compound; precedence: explicit_correction)
+8. "Scratch that — the race is a 10K, not a 5K." [syn]
+
+Near-miss negatives (NOT explicit_correction):
+1. "No, I'm pretty sure my friend said it's $10 to get from the airport to the hotel by train." [real, 09ba9854 s0 t8] -> corrects the ASSISTANT'S WORLD-KNOWLEDGE claim (train fare), targets no tracked user state -> other (rule e).
+2. "I'm actually thinking of making some changes to my dinner party menu." [real, 6aeb4375 s1 t4] -> "actually" as discourse marker; no prior record contradicted -> speculative.
+3. "I moved to Chicago" (user previously said they lived in Boston, no claim the old statement was wrong) [syn] -> completed_event (update, not correction).
+4. "No wait, let's do Italian instead of Korean for the party." [syn] -> revises an in-conversation plan, not stored canonical state -> other (or speculative if plans are tracked as staged items).
+5. "I was wrong to buy those shoes." [syn] -> self-evaluation of a decision, not of the record -> other.
+6. "That's not what I meant — I wanted tips for TRAIL running, not road running." [syn] -> clarification of communicative intent, not a fact correction -> other.
+
+Decision rules:
+- E1. Require an ADDRESSABLE TARGET: a specific prior user statement or a stored/assistant-voiced belief about tracked state that the new statement contradicts AS OF ITS ORIGINAL ASSERTION TIME. No target => not a correction (likely completed_event or other).
+- E2. Correction markers ("actually", "no,", "correction", "I meant", "scratch that", "misspoke") are neither necessary nor sufficient. Sufficient = target + contradiction + corrective intent. "Actually" alone is a discourse marker roughly half the time in this register.
+- E3. Update-vs-correction tiebreak: if the statement is temporally consistent with the old value having been true earlier (world changed), label completed_event; if it entails the old record was false when recorded, label explicit_correction. If genuinely undecidable from context, label explicit_correction and set "uncertain": true.
+
+1.4 CLASS: other / non-revisionary
+
+Definition. Everything that does not license or stage a revision to canonical current state: additive observations (monotone facts), preferences, goals, habitual/ongoing states, hedged recall of existing facts, scheduled appointments as facts about the calendar, questions/meta-talk, corrections of the assistant's general world knowledge, statements with no extractable state content.
+
+Positive examples:
+1. "...have you tried any good Korean restaurants in my city lately? I've tried four different ones so far..." [real, 6aeb4375 s1 t2] (additive count fact)
+2. "As of last week, I've clocked 347 miles since the start of the year." [real, gpt4_d84a3211 s1 t2]
+3. "My goal is to reach 1000 miles by the end of summer." [real, gpt4_d84a3211 s1 t2]
+4. "I think it's in two weeks, I remember my teammate saying something about it." [real, 6a1eabeb s0 t2] (hedged recall; rule S3)
+5. "I'm scheduled to start physical therapy sessions twice a week since March 25th." [real, 00ca467f s1 t10]
+6. "No, I'm pretty sure my friend said it's $10 by train." [real, 09ba9854 s0 t8] (corrects assistant's world claim; rule e)
+7. "Can you give me some tips on how to improve my endurance for soccer...?" [real, 6a1eabeb s0 t2] (no fact)
+
+Near-miss negatives (NOT other):
+1. "I'm thinking of getting a new bike rack." [real, gpt4_76048e76 s0 t0] -> speculative (unrealized change; even though ownership is a monotone attribute, the statement's evidence type is speculative and its content must not be treated as realized).
+2. "I just got back from Sunday mass at St. Mary's Church on March 19th." [real, 2a1811e2 s0 t0] -> completed_event (low stakes, still an event report).
+3. "I live in Seattle now" (store says Portland) [syn] -> completed_event.
+4. "It's 25:50 now, not 27:12 like I said before." [syn] -> explicit_correction.
+5. "My friend said the 'check engine' light came on when she borrowed it." [real, gpt4_76048e76 s1 t2] -> completed_event (second-hand asserted event about user's car).
+
+1.5 EDGE-CASE DECISION RULES (a)-(g) — NORMATIVE
+
+These implement the gate question. Each rule states the class and the reason in terms of "licenses revising canonical current state." When one of these rules decides your label, put its letter in edge_case_flags.
+
+(a) Planned-but-not-completed events with high certainty ("I'm moving next month", "I start the new job Monday") -> SPECULATIVE for the canonical-revision tuple (current-city, employer). The world event has not occurred; a high-certainty plan still fails the gate question — plans get cancelled, and a cancellation ("I decided not to...") must be able to arrive later. Certainty is metadata, never a class flip. The plan itself ("user intends to move next month") is a separate additive observed fact (other).
+
+(b) Scheduled events stated as fact ("my flight is on the 12th", "I'm scheduled to see a gastroenterologist, Dr. Patel, on April 15th" [real, gpt4_7de946e7 s0 t6]) -> the SCHEDULE tuple (appointment/flight as calendar fact) is OTHER (additive observed fact — it is true NOW that the appointment exists). Any IMPLIED future canonical change (e.g., "I start on the 1st" implying employer change) is a separate tuple, classed SPECULATIVE per (a). Most scheduled statements implicate no canonical attribute at all and yield only the other tuple.
+
+(c) Second-hand or inferred information ("my wife thinks we should move") -> source hand (first/second) does NOT itself determine class; assertion force and event completion do. Second-hand DELIBERATION ("my wife thinks we should X", "my mom wants me to Y") => SPECULATIVE (at most). Second-hand ASSERTED COMPLETED EVENT about tracked state ("my friend said the 'check engine' light came on when she borrowed it" [real, gpt4_76048e76 s1 t2]; "my wife told me the lease termination went through" [syn]) => COMPLETED_EVENT — the speaker asserts the event as fact; provenance is metadata, the class boundary follows assertion force. Speaker-inferred claims ("I guess the package must have arrived") => SPECULATIVE (irrealis assertion force).
+
+(d) Present-tense state implying past completed change ("I live in Seattle now") -> COMPLETED_EVENT when it conflicts with stored canonical state: the assertion entails the change already happened. The "now"/"these days"/"anymore" adverbials are strong cues but not required — bare "I live in Seattle" conflicting with stored "Portland" classifies the same. If NO stored value exists, the identical sentence is a plain first observation -> OTHER. You are shown the current stored value for the target attribute when one exists; this store-conditioning is part of the task definition.
+
+(e) Corrections of the assistant vs. of the user's own prior statement -> both can be EXPLICIT_CORRECTION, with one boundary: the correction must target TRACKED STATE (the user's prior statement, or a stored belief the assistant voiced). "No, I said Tuesday" and "my dog is Max, not Rex" => explicit_correction. Correcting the assistant's GENERAL WORLD KNOWLEDGE ("no, the train is $10" [real, 09ba9854 s0 t8]) targets nothing in the user-state store => OTHER. Denying an assistant hallucination the user never stated and the store never held ("I don't have a dog?!") => a negative observed fact, OTHER — there is nothing to retro-invalidate; if the store DOES hold the hallucinated fact, the same utterance is explicit_correction.
+
+(f) Negations ("I decided not to take the job") -> COMPLETED_EVENT: the DECISION is a completed event whose content is a negative outcome. It resolves/invalidates any pending job-change hypothesis; abandonments and decided-against statements belong here, not in explicit_correction. Negation of a stored CURRENT fact without replacement ("I don't live in Portland anymore") => completed_event with unknown new value. Negation of a never-asserted, never-stored proposition => OTHER (additive negative fact).
+
+(g) Statements about others ("My friend Rachel actually just moved back to the suburbs again" [real, 830ce83f s1 t2]) -> the taxonomy applies PER ENTITY: the statement is classed relative to RACHEL'S canonical state. Third-party statements are inherently second-hand, so rule (c) governs assertion force: "Rachel moved" => completed_event (for entity Rachel); "Rachel is thinking about moving" => speculative (for entity Rachel). Statements about others never revise the USER'S canonical attributes unless the user is an argument of the change ("my wife and I moved").
+
+=========================================================================
+FINAL REMINDERS
+=========================================================================
+
+- Classify the TUPLE you were given, not the whole turn.
+- Apply the precedence rule when cues conflict: explicit_correction > completed_event > speculative > other.
+- Cite rule ids in "rationale". Use "edge_case_flags" for every (a)-(g) rule that applies; add an "uncovered: ..." flag if no rule covers the difficulty you see.
+- Output the JSON object only — no prose outside it.
