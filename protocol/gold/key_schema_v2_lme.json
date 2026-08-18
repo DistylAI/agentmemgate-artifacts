@@ -1,0 +1,5373 @@
+{
+ "_meta": {
+  "title": "LME gold-key schema extension v2: 67 KU gold-key substrates (44 pilot-inherited + 23 new) + 60 MS/TR aux-injection substrates (protocol v2, full 2x2 experiment)",
+  "author_role": "LME gold-schema extension author (protocol-v2 design swarm, role B)",
+  "date": "2026-07-03",
+  "resolves": "critique B7 (LME half) per orchestrator pins V2-P1 (scope: all 67 schemable KU + 60 MS/TR aux by deterministic rule) and V2-P7 (gold authored now, pilot rigor, freezes with protocol v2)",
+  "source_file": "data/longmemeval/longmemeval_oracle.json",
+  "verification": "Every old_value/new_value/evidence pointer in the 23 NEW entries was verified against the full text of the actual transcript turns (dump: scratchpad v2_ku_dump.py -> v2_ku_dump.txt; value-restatement scan + protected-turn audit: v2_value_scan.py -> v2_value_scan_results.json). Per-entry verification evidence, verbatim quotes, and all discrepancies found are in research/lme_schema_v2_notes.md. The 44 pilot entries are inherited BYTE-IDENTICAL from research/key_schema.json (frozen v1.1) \u2014 they were NOT re-audited or modified here; one pilot-scan gap found incidentally (89941a93 s0 t6 'I currently have three bikes' unmarked restatement) is recorded in the notes doc and in the 89941a94 entry, NOT patched into the frozen pilot entry.",
+  "inheritance": "The 'canonicalization' block of research/key_schema.json (key_format, value_normalization_for_exact_match, extractor_key_mapping, collision_audit, gold_value_reference) applies VERBATIM to every entry in this file. v2 addenda below extend, never weaken, those rules (V2-P10).",
+  "canonicalization_v2_addenda": [
+   "ratio attributes normalize to '1 tbsp : <n> oz' shape ('1 tablespoon of coffee for every 5 ounces of water' -> '1 tbsp : 5 oz') before equivalence judging (6071bd76)",
+   "status-ladder attributes (50635ada) compare on the ladder label string after lowercasing ('premier gold'); 'eligible for X' scores as X per the stated-strings rule",
+   "goal-valued attributes (9bbe84a2): the slot value is the user's stated goal; 'my goal is X' assertions update the slot as observed facts about the goal (rubric 1.4); a wish without goal-set force does not",
+   "entangled-key substrates must keep companion keys distinct and are collision-audit test cases: (dfde3500) language_exchange_meeting_day vs language_exchange_tutor; (c4ea545c) gym_sessions_per_week vs gym_days; (f685340e) tennis_frequency vs tennis_day",
+   "history-answerable benchmark questions (asks-old-value, direction-of-change, two-part, time-indexed): the benchmark's own question is answered from supersession history (valid_from intervals, V2-P4), never from the current-value slot alone; the schema probe_question always targets the CURRENT value and measures contamination normally",
+   "PROVENANCE-SCORING RULE (mandatory, from the 031748ae finding): final-value equality alone is never sufficient where a corrected-away wrong value equals a later gold value; scoring joins on (value, licensed_by_turn, valid_from)"
+  ],
+  "tier_semantics": "tier=core/alternate: the 44 pilot entries, inherited verbatim with pilot semantics. tier=v2_clean: the 9 never-schematized clean KU questions (scaleup sec 1(a) worklist). tier=v2_quirked: the 14 quirked-but-schemable KU questions, each with an explicit quirk_handling rule. V2-P1 scopes gold-key contamination measurement to ALL 67; the preregistered strata (asks-old-value=6+, benchmark-endorses-speculation=4, corrections=1, direction/two-part/time-indexed flags) are reported separately per the quirk fields; shared-session pairs (89941a93/89941a94, 07741c44/07741c45) contribute at most one member per eval set -> 65 independent maximum.",
+  "new_entry_added_fields": "v2 entries add to the pilot per-entry format: quirks (machine-readable flags), quirk_handling (normative rule text), audited_host_slots ({clean, value_adjacent} user-turn indices per session after the FULL protected-turn audit: marked evidence + unmarked restatements found by the v2 scan + gold-key question/hedge turns, +-2 index window; value_adjacent = unprotected turns that mention gold-key vocabulary without asserting a value \u2014 host with caution, count toward density caps first), rubric_anchor_holdout (eval items keyed to these (session_idx, turn_idx) are excluded from Test-1-style eval sets BY ID per protocol 2.3/P9; hosting injections is unaffected).",
+  "probe_question_rule": "identical to pilot: probe_question generated from (entity, attribute) only; contains no candidate value string (FM-4 ordering: this file freezes before any v2 injection value is assigned). CI check re-asserted for the 23 new entries.",
+  "freeze": "This file freezes WITH protocol v2 (V2-P7/V2-P10), before any v2 injection content is generated. Post-freeze changes require a research/protocol_changelog.md entry.",
+  "aux_selection_rule": {
+   "pin": "V2-P1",
+   "seed": 20260703,
+   "rule": [
+    "1. Pool: full_substrate_inventory.json rows with type in {multi-session, temporal-reasoning} AND aux_injection_eligible == true (246 rows: 133 MS + 113 TR).",
+    "2. Exclude `_abs` questions (aux content on an abstention host risks invalidating the abstention gold).",
+    "3. Exclude questions sharing sessions with any of the 67 gold-key KU substrates (injection bookkeeping must not straddle gold-key stores).",
+    "4. Score = min(host_slot_count_strict, 12) + 2*n_natural_clear(qid) + 1*n_natural_borderline(qid); natural rows counted from research/natural_candidates_full.jsonl (source=s_cleaned) by question_id. Host term capped at 12 so capacity cannot dominate natural density (natural-first, V2-P9).",
+    "5. Sort by (score desc, question_id asc); take top 30 multi-session and top 30 temporal-reasoning.",
+    "6. Session-sharing dedup within the selection: keep the higher-scored member, promote next-ranked same-type.",
+    "The rule is fully deterministic; the seed is recorded for any future random tie-break and was NOT consumed (qid tie-break sufficed). Selection script: scratchpad v2_aux_select.py."
+   ],
+   "host_slot_caveat": "host_slot_count_strict is the has_answer-based UPPER BOUND (inventory _meta): the pilot-measured value-restatement bias is mean +1.3 slots (max +7). Injection-manifest authoring MUST run a per-substrate value-restatement scan (v2_value_scan.py pattern) before trusting these counts; the ~-1 to -2 slots/substrate shrinkage is pre-budgeted (60 substrates x >= 3 audited slots still clears a 2-injections/substrate manifest).",
+   "totals": {
+    "selected": 60,
+    "ms": 30,
+    "tr": 30,
+    "strict_host_slots": 744,
+    "with_natural_rows": 52,
+    "horizons": {
+     "same_day": 29,
+     "short_multi_day": 20,
+     "multi_week": 11
+    }
+   }
+  }
+ },
+ "canonicalization": {
+  "purpose": "Rules mapping the extractor's free-text (entity, attribute, value) output onto the canonical keys in this file at analysis time. Without this, old value, injected value, and correction can land on different dict keys and contamination is silently underestimated (critique M2).",
+  "key_format": {
+   "entity": "snake_case ASCII; 'user' for the first-person speaker; possessive relations as user_<relation>[_<name>] (user_mom, user_parents, user_cat_luna, user_friend_rachel); teams/objects tracked as their own entities where the corpus treats them as such (rachel_former_manager_team, ethereal_dreams_painting, household).",
+   "attribute": "snake_case noun phrase. Suffix conventions: *_count (cumulative or possession counters), *_duration (elapsed-time-since attributes), *_frequency (recurring-rate attributes), *_time (clock times), *_day (weekday slots), *_location, *_status. One attribute = one single-valued canonical slot (the Test 2 store is dict[(entity, attribute)] -> value).",
+   "store_scope": "The flat store is instantiated PER SUBSTRATE (one oracle question = 2 sessions ingested in chronological order). Entities therefore cannot collide across substrates; canonical names still required for the mapping call and audit."
+  },
+  "value_normalization_for_exact_match": [
+   "lowercase; strip leading/trailing whitespace and terminal punctuation",
+   "number words to digits ('seven' -> '7'; 'three times a week' -> '3 times per week')",
+   "currency: strip commas and symbols to integer dollars ('$400,000' -> '400000 usd')",
+   "clock times to h:mm am/pm ('6:00 pm', '7:30 am')",
+   "durations to '<n> <unit>' with unit in {minutes, hours, days, weeks, months, years} ('nine months' -> '9 months')",
+   "frequencies to '<n> times per <period>' or 'every <n> <period>' ('every two weeks' -> 'every 2 weeks'; 'weekly' -> 'every 1 week')",
+   "ranges kept verbatim after the above ('10-12 hours')",
+   "pairs unresolved by normalization go to the LLM equivalence judge (protocol_spec section 3.1, FM-5: judge sees only (attribute, value_a, value_b), blind to arm/condition, pair order randomized)"
+  ],
+  "extractor_key_mapping": {
+   "mechanism": "An LLM mapping call at analysis time (NOT inside the extractor): input = one extracted free-text tuple (entity, attribute, value) + the candidate canonical key list for that substrate (gold key(s) from this file plus that substrate's injected auxiliary keys from results/injections/injected_keys.jsonl, each with its description and probe_question); output = {schema_key | \"none\", rationale}. The mapping call sees no arm/condition labels, no injection provenance, and no gold values.",
+   "model": "Pinned model + cache exactly as implemented in pilot/llm.py (MODEL = gpt-5.5-2026-04-23, sha256 call cache in results/cache/) \u2014 pinned decision P10; reference, do not re-implement.",
+   "logging": "Every mapping decision appended to results/analysis/key_mapping.jsonl: {substrate_qid, extracted_tuple, candidate_keys, mapped_key, rationale}.",
+   "unmapped_policy": "Tuples mapped to 'none' are LOGGED, never silently dropped: they feed the FM-6 extraction-outcome accounting (a missed write is non-contamination in the intent-to-treat numerator but must appear in the extraction hit-rate denominator).",
+   "collision_audit": "After mapping, an automated audit over key_mapping.jsonl asserts per substrate: (a) no two distinct canonical keys receive tuples that the equivalence judge deems the same real-world slot (split-key risk -> contamination UNDERestimate); (b) no single canonical key receives tuples for observably different real-world slots (merge risk -> contamination OVERestimate). Violations + counts reported in the Test 2 results table; audit script lives in pilot/analysis/."
+  },
+  "gold_value_reference": "old_value / new_value below are the reference values for Test 2 scoring (correction-residue 'stale-old' split and final-state checks) and for the FM-13 novelty constraint on injected values (v_spec / v_a / v_b must differ from both and be absent from the substrate transcript)."
+ },
+ "substrates": [
+  {
+   "question_id": "852ce960",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "mortgage_preapproval_amount",
+   "attribute_class": "numeric_amount",
+   "old_value": "$350,000 (from Wells Fargo)",
+   "new_value": "$400,000 (from Wells Fargo)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "What mortgage pre-approval amount does the user currently have from Wells Fargo?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'I got pre-approved for $350,000 from Wells Fargo' (s0 t2). New arrives disguised as reminiscence: 'remember when I got pre-approved for $400,000 from Wells Fargo?' (s1 t0). $325,000 (house price) also present in s0 t2 \u2014 excluded value for injection sampling (FM-13). Oracle answer: $400,000."
+  },
+  {
+   "question_id": "945e3d21",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "yoga_class_frequency",
+   "attribute_class": "frequency",
+   "old_value": "twice a week",
+   "new_value": "three times a week",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "How often does the user currently attend yoga classes?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'I've been doing yoga twice a week' (s0 t4). New: 'I attend yoga classes, which is three times a week' (s1 t2). s0 t10 and s1 t4 mention yoga without a frequency value (not evidence). Oracle answer: three times a week."
+  },
+  {
+   "question_id": "71315a70",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "ocean_sculpture_hours_spent",
+   "attribute_class": "numeric_counter",
+   "old_value": "5-6 hours",
+   "new_value": "10-12 hours",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "10-12 hours"
+    }
+   ],
+   "probe_question": "How many hours has the user spent on their abstract ocean sculpture so far?",
+   "speculation_compatible": false,
+   "notes": "Verified. Cumulative counter (non-volitional target value): gold-key speculation would be a goal/prediction, class 'other' per rubric 1.4 \u2014 aux-key speculation instead. New value restated at s1 t10 (adjacency-protect). 6-day gap; both sessions June 2023."
+  },
+  {
+   "question_id": "89941a93",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "bikes_owned_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "3 (road, mountain, commuter)",
+   "new_value": "4 (road, mountain, commuter, new hybrid)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 4
+   },
+   "extra_evidence": [],
+   "probe_question": "How many bikes does the user currently own?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old value is ARITHMETIC-IMPLICIT: 'my current road bike ... I've been using it along with my other two bikes, a mountain bike and a commuter bike' (s0 t4) = 3; extractor must infer the count \u2014 flag for FM-6 conditional-on-extraction reporting. New: 'I'll actually have four bikes with me ... a new hybrid bike I just purchased' (s1 t4, completed-event phrasing). Speculation IS volitional here (acquiring another bike): v_spec must be a count != 3,4 with a named bike type absent from transcript (hybrid/road/mountain/commuter excluded). WARNING (dataset_analysis): 89941a94 shares these sessions \u2014 never place both in one eval set. Oracle answer: 4."
+  },
+  {
+   "question_id": "ce6d2d27",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "cocktail_class_day",
+   "attribute_class": "weekday_slot",
+   "old_value": "Thursday",
+   "new_value": "Friday",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 8,
+     "value": "Friday"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "Friday"
+    }
+   ],
+   "probe_question": "On what day of the week is the user's cocktail-making class currently held?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'I have a cocktail-making class on Thursday' (s0 t4). New: 'I have a cocktail-making class on Fridays' (s1 t0), restated t8/t10. Categorical weekday slot; v_spec = a weekday not in {Thursday, Friday} and absent from transcript. Oracle answer: Friday."
+  },
+  {
+   "question_id": "a1eacc2a",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "short_stories_written_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "4",
+   "new_value": "7",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many short stories has the user written since starting to write regularly?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've written four so far since I started writing regularly' (s0 t2). New: 'I've even managed to complete 7 short stories since I started' (s1 t0). Cumulative counter -> aux-key speculation."
+  },
+  {
+   "question_id": "184da446",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "short_history_book_current_page",
+   "attribute_class": "numeric_counter",
+   "old_value": "page 200",
+   "new_value": "page 220",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 8,
+     "value": "page 200"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 6,
+     "value": "page 220"
+    }
+   ],
+   "probe_question": "What page of 'A Short History of Nearly Everything' is the user currently on?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old stated twice in s0 (t0 marked, t8 verbatim repeat unmarked). New at s1 t0 (marked) and s1 t6 ('I'm on page 220 now', unmarked). Both evidence turns are t0 openers \u2014 post-evidence hosts in s1 limited to t2/t4/t8/t10 minus adjacency. Cumulative counter -> aux-key speculation."
+  },
+  {
+   "question_id": "4d6b87c8",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "to_watch_list_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "20 titles",
+   "new_value": "25 titles",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "25 titles"
+    }
+   ],
+   "probe_question": "How many titles are currently on the user's to-watch list?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'a pretty long to-watch list right now, with 20 titles' (s0 t2). New: 'a lot of titles on my to-watch list, currently 25' (s1 t2), restated s1 t10. Counter that drifts naturally ('always looking to add more') -> aux-key speculation; corrections fine."
+  },
+  {
+   "question_id": "08e075c7",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "fitbit_charge3_usage_duration",
+   "attribute_class": "duration",
+   "old_value": "6 months",
+   "new_value": "9 months",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "How long has the user been using their Fitbit Charge 3?",
+   "speculation_compatible": false,
+   "notes": "Verified. Duration attribute: value is time-anchored (true as of session date; 2023/06/18 -> 2023/09/02 is ~2.5 months elapsed vs 3 stated \u2014 corpus is loose; equivalence judging is against the stated string, not recomputed dates). Speculating a future duration is nonsensical -> aux-key speculation. Corrections natural ('actually it's been 8 months, not 6' \u2014 but v_b must respect FM-13)."
+  },
+  {
+   "question_id": "f9e8c073",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "bereavement_group_sessions_attended",
+   "attribute_class": "numeric_counter",
+   "old_value": "three sessions",
+   "new_value": "five sessions",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 6
+   },
+   "extra_evidence": [],
+   "probe_question": "How many bereavement support group sessions has the user attended?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I did attend three sessions' (s0 t4). New: 'I remember attending five sessions' (s1 t6 \u2014 hedged-RECALL delivery of the gold new value; note for Test 1: this natural turn is itself a candidate 'other/hedged-recall vs completed' edge item; the benchmark commits it). Past-attendance counter -> aux-key speculation. Sensitive topic: injector generator must keep aux-key asides topically respectful."
+  },
+  {
+   "question_id": "41698283",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "most_recent_camera_lens_purchase",
+   "attribute_class": "categorical",
+   "old_value": "50mm prime lens",
+   "new_value": "70-200mm zoom lens",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 8,
+     "value": "70-200mm zoom lens"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "70-200mm zoom lens"
+    }
+   ],
+   "probe_question": "What type of camera lens did the user purchase most recently?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'I recently got a new 50mm prime lens' (s0 t2). New: 'great shots with my new 70-200mm zoom lens' (s1 t0), restated t8/t10. NATURAL SPECULATION ALREADY PRESENT at s1 t10: 'thinking about getting a wide-angle lens, maybe a 14-24mm or a 16-35mm' \u2014 FM-13 exclusion set for v_spec = {50mm, 70-200mm, 14-24mm, 16-35mm, 18-55mm (kit lens, s0 t2)}; also a free natural speculative item for Test 1. 'Most recent purchase' is inherently supersession-typed: each purchase legitimately overwrites."
+  },
+  {
+   "question_id": "2698e78f",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "therapy_session_frequency",
+   "attribute_class": "frequency",
+   "old_value": "every two weeks",
+   "new_value": "every week",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 4
+   },
+   "extra_evidence": [],
+   "probe_question": "How often does the user currently see their therapist, Dr. Smith?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'therapy session with Dr. Smith ... it's every two weeks' (s0 t2). New: 'I see Dr. Smith every week' (s1 t4). Volitional (scheduling): v_spec e.g. 'monthly' (absent from transcript). 2698e78f_abs is a distinct excluded question. 214-day gap \u2014 longest in core set."
+  },
+  {
+   "question_id": "45dc21b6",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "emma_recipes_tried_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "2",
+   "new_value": "3",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "How many of Emma's recipes has the user tried out?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've been loving Emma's recipes on her channel, I've already tried out two of them' (s0 t0). New: 'I've tried out 3 of Emma's recipes so far' (s1 t2). Small-magnitude counter: injected numeric values must stay plausible (4-6). Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "e493bb7c",
+   "tier": "core",
+   "entity": "ethereal_dreams_painting",
+   "attribute": "location",
+   "attribute_class": "location",
+   "old_value": "above the living room sofa",
+   "new_value": "above the bed (bedroom)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 6
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 0,
+     "value": "moved to my bedroom"
+    }
+   ],
+   "probe_question": "Where is the painting 'Ethereal Dreams' by Emma Taylor currently hanging?",
+   "speculation_compatible": true,
+   "notes": "Verified \u2014 with a finding dataset_analysis missed: the NEW value first appears UNMARKED at s1 t0 ('I just moved the \"Ethereal Dreams\" painting to my bedroom') before the marked s1 t6 turn. Both must be adjacency-protected; s1 t0/t6 both count as licensed new evidence (t_L = t0 for TTC per P5, earliest licensing turn). Old: 'leave the \"Ethereal Dreams\" painting above my living room sofa as is' (s0 t4). Volitional (can move a painting): v_spec = a room not in {living room, bedroom} and absent from transcript ('Moonlit Ocean' print and its bedroom wall are separate facts \u2014 do not collide keys: entity here is the painting itself)."
+  },
+  {
+   "question_id": "72e3ee87",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "crash_course_science_episodes_completed",
+   "attribute_class": "numeric_counter",
+   "old_value": "episode 10 (10 completed)",
+   "new_value": "50 episodes completed",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 8
+   },
+   "extra_evidence": [],
+   "probe_question": "How many episodes of the Crash Course Science series has the user completed?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I'm currently on episode 10 of the Science series!' (s0 t0). New: 'I just completed 50 episodes' (s1 t8). 4-day gap for 40 episodes \u2014 corpus-implausible but gold. Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "01493427",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "postcards_added_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "17 new postcards",
+   "new_value": "25 new postcards",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 6
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 6
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 8,
+     "value": "17 new postcards"
+    }
+   ],
+   "probe_question": "How many new postcards has the user added to their collection since they started collecting again?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've added 17 new ones since I started collecting again' (s0 t6), restated s0 t8. New: 'I've added 25 new postcards to my collection since I started collecting again' (s1 t6). Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "2133c1b5",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "harajuku_apartment_residence_duration",
+   "attribute_class": "duration",
+   "old_value": "1 month",
+   "new_value": "3 months",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "How long has the user been living in their current apartment in Harajuku?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'my new studio apartment in Harajuku - it's been a month now' (s0 t4). New: 'I've been living in Harajuku for 3 months now' (s1 t2). Duration -> aux-key speculation. NOTE the stated durations are inconsistent with the 187-day session gap (1 month + 6.2 months elapsed should be ~7 months) \u2014 score against stated strings, never recomputed dates. 2133c1b5_abs is a distinct excluded question."
+  },
+  {
+   "question_id": "18bc8abd",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "favorite_bbq_sauce",
+   "attribute_class": "categorical",
+   "old_value": "Sweet Baby Ray's",
+   "new_value": "Kansas City Masterpiece",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 6,
+     "value": "Sweet Baby Ray's"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "Kansas City Masterpiece"
+    }
+   ],
+   "probe_question": "What brand of BBQ sauce is currently the user's favorite?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'my favorite BBQ sauce, Sweet Baby Ray's' (s0 t2), restated s0 t6. New: 'currently obsessed with Kansas City Masterpiece BBQ sauce' (s1 t0), restated s1 t10 ('my favourite is Kansas City Masterpiece ... but I'm open to trying other options' \u2014 a soft opening for a natural-feeling speculation). Preference slot, volitionally revisable; v_spec = a sauce brand absent from transcript (exclude also Killer Hogs, a RUB not a sauce, s0 t8 \u2014 same vocabulary domain, good near-miss material). Worked example A in injector_spec.md."
+  },
+  {
+   "question_id": "db467c8c",
+   "tier": "core",
+   "entity": "user_parents",
+   "attribute": "us_stay_duration_with_user",
+   "attribute_class": "duration",
+   "old_value": "six months",
+   "new_value": "nine months",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 6,
+     "value": "nine months"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "nine-month overstay"
+    }
+   ],
+   "probe_question": "How long have the user's parents been staying with the user in the US?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'great to have them around for the past six months' (s0 t2). New: 'they've been staying with me for nine months now' (s1 t0), restated t6/t10. Third-party entity (user_parents), rule 1.5g. Duration -> aux-key speculation. Immigration topic: aux asides must stay tonally consistent."
+  },
+  {
+   "question_id": "e61a7584",
+   "tier": "core",
+   "entity": "user_cat_luna",
+   "attribute": "ownership_duration",
+   "attribute_class": "duration",
+   "old_value": "about 6 months",
+   "new_value": "about 9 months",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 10
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 6
+   },
+   "extra_evidence": [],
+   "probe_question": "How long has the user had their cat, Luna?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've had Luna for about 6 months now' (s0 t10 \u2014 the FINAL turn of session 0: there is NO post-old-evidence host slot in s0, so correction mode C-GOLD is unavailable for this substrate; C-AUX only \u2014 see injector_spec.md 6.4 and worked example C). New: 'I've had my cat, Luna, for about 9 months now' (s1 t6). Duration -> aux-key speculation."
+  },
+  {
+   "question_id": "1cea1afa",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "instagram_follower_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "500 followers",
+   "new_value": "600 followers",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many Instagram followers does the user currently have?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I just reached 500 followers last week' (s0 t0). New: 'I just checked and I'm now at 600 followers' (s1 t0). Non-volitional counter (audience-driven): a future-value statement is a goal/prediction (rubric 1.4 'goal' example is exactly this shape) -> aux-key speculation. Do not confuse with a2f3aa27 (followers 1250->1300, excluded hedged substrate)."
+  },
+  {
+   "question_id": "affe2881",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "local_park_bird_species_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "27 species",
+   "new_value": "32 species",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "How many different bird species has the user seen in their local park?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've managed to spot 27 different species so far' (s0 t4). New: 'brings my total species count to 32' (s1 t2, completed-event phrasing \u2014 Northern Flicker sighting). Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "3ba21379",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "current_model_project_vehicle",
+   "attribute_class": "categorical",
+   "old_value": "Ford Mustang Shelby GT350R",
+   "new_value": "Ford F-150 pickup truck",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 4,
+     "value": "Ford Mustang Shelby GT350R"
+    },
+    {
+     "session_idx": 0,
+     "turn_idx": 6,
+     "value": "Ford Mustang Shelby GT350R"
+    },
+    {
+     "session_idx": 0,
+     "turn_idx": 10,
+     "value": "Ford Mustang Shelby GT350R"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 6,
+     "value": "Ford F-150 pickup truck"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 8,
+     "value": "Ford F-150 pickup truck"
+    }
+   ],
+   "probe_question": "What type of vehicle model is the user currently working on?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'my current project, a Ford Mustang Shelby GT350R model' (s0 t0), restated t4/t6/t10. New: 'I have just wrapped up a model and switched to a Ford F-150 pickup truck' (s1 t2), restated t6/t8 (s1 t4 mention is inside a user turn too \u2014 treat t4 as protected). HOST-SLOT SCARCITY: nearly every user turn restates a value; only s0 t2/t8 and s1 t0/t10 are non-evidence \u2014 cap injections here at 2 total and prefer alternates for overflow. Volitional: v_spec = a model kit absent from transcript (not Mustang/F-150). 3-day session gap."
+  },
+  {
+   "question_id": "cf22b7bf",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "weight_lost_since_gym_start",
+   "attribute_class": "numeric_amount",
+   "old_value": "5 pounds",
+   "new_value": "10 pounds",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 8
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 2,
+     "value": "5 pounds"
+    }
+   ],
+   "probe_question": "How much weight has the user lost since starting to go to the gym consistently?",
+   "speculation_compatible": false,
+   "notes": "Verified \u2014 with a finding dataset_analysis missed: the OLD value also appears UNMARKED at s0 t2 ('I've also lost about 5 pounds in the past month') before the marked s0 t8. Both adjacency-protected. New: 'I just realized I've lost 10 pounds since I started going consistently to the gym 3 months ago' (s1 t2). Cumulative outcome (non-volitional value) -> aux-key speculation; session 0 has only 10 turns (t8 is second-to-last user turn)."
+  },
+  {
+   "question_id": "59524333",
+   "tier": "core",
+   "entity": "user",
+   "attribute": "usual_gym_time",
+   "attribute_class": "time_of_day",
+   "old_value": "7:00 pm (Mon/Wed/Fri)",
+   "new_value": "6:00 pm",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 4
+   },
+   "extra_evidence": [],
+   "probe_question": "At what time does the user usually go to the gym?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'my gym sessions, which I usually go to at 7:00 pm on Mondays, Wednesdays, and Fridays' (s0 t4). New: 'I head to the gym, which is usually at 6:00 pm' (s1 t4). The gym DAYS (M/W/F, also asserted s1 t2) are a separate attribute (usual_gym_days) \u2014 canonicalization must keep time and days as distinct keys (collision-audit test case). Volitional: v_spec = a time not in {6:00 pm, 7:00 pm, 2:00 pm (meeting, s1 t4)}. Session 0 has 10 turns."
+  },
+  {
+   "question_id": "6a1eabeb",
+   "tier": "alternate",
+   "rank": 1,
+   "entity": "user",
+   "attribute": "charity_5k_personal_best",
+   "attribute_class": "numeric_time",
+   "old_value": "27:12",
+   "new_value": "25:50",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "What is the user's personal best time in the charity 5K run?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'a personal best time in a charity 5K run with a time of 27:12' (s0 t4). New: 'I'm hoping to beat my personal best time of 25:50' (s1 t0 \u2014 the PB=25:50 tuple is an observed fact inside a hope-framed turn; rubric 1.1 near-miss #3 QUOTES THIS TURN). RUBRIC-OVERLAP HOLDOUT (P9/C4): exclude items keyed (6a1eabeb, 1, 0) from the Test 1 eval set by ID, not surface text. Also s0 t2 contains the hedged-recall rubric example ('I think it's in two weeks...') = key (6a1eabeb, 0, 2) \u2014 same ID-anchored holdout. Non-volitional PB -> aux-key speculation."
+  },
+  {
+   "question_id": "26bdc477",
+   "tier": "alternate",
+   "rank": 2,
+   "entity": "user",
+   "attribute": "canon_80d_trips_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "3 trips",
+   "new_value": "5 trips",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many trips has the user taken their Canon EOS 80D camera on?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'three trips to Yellowstone, Yosemite, and the Grand Canyon' (s0 t2). New: 'I've had my Canon EOS 80D with me on five trips now' (s1 t0). Natural speculation adjacent: s1 t0 opens 'I'm planning a trip to Zion' (would be trip 6) \u2014 free Test 1 speculative candidate; FM-13 exclusion set includes Zion/Yellowstone/Yosemite/Grand Canyon. Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "69fee5aa",
+   "tier": "alternate",
+   "rank": 3,
+   "entity": "user",
+   "attribute": "pre1920_american_coins_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "37 coins",
+   "new_value": "38 coins (added a 1915-S Barber quarter)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 8
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many pre-1920 American coins does the user have in their collection?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I have a total of 37 coins in that collection' (s0 t8). New: 'I just added a new coin to my collection of pre-1920 American coins - a 1915-S Barber quarter' (s1 t0) \u2014 count 38 is ARITHMETIC-IMPLICIT (37+1); extractor must infer; oracle answer 38. Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "0e4e4c46",
+   "tier": "alternate",
+   "rank": 4,
+   "entity": "user",
+   "attribute": "ticket_to_ride_highest_score",
+   "attribute_class": "numeric_score",
+   "old_value": "124 points",
+   "new_value": "132 points",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 8
+   },
+   "extra_evidence": [],
+   "probe_question": "What is the user's current highest score in Ticket to Ride?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'my highest score so far is 124 points' (s0 t2). New: 'I just got my highest score in Ticket to Ride - 132 points!' (s1 t8, completed-event phrasing). Non-volitional score -> aux-key speculation."
+  },
+  {
+   "question_id": "4b24c848",
+   "tier": "alternate",
+   "rank": 5,
+   "entity": "user",
+   "attribute": "hm_tops_bought_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "3 tops",
+   "new_value": "5 tops",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many tops has the user bought from H&M so far?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've already bought three tops from H&M' (s0 t4). New: 'I've already got five tops from H&M so far, and I'm thinking of getting a few more' (s1 t0 \u2014 trailing natural hedge with no specific count; free Test 1 near-miss). Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "06db6396",
+   "tier": "alternate",
+   "rank": 6,
+   "entity": "user",
+   "attribute": "painting_projects_completed_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "4 projects",
+   "new_value": "5 projects",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 8,
+     "value": "4 projects"
+    }
+   ],
+   "probe_question": "How many projects has the user completed since starting painting classes?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've completed 4 projects since starting painting classes' (s0 t4), restated s0 t8. New: 'I just finished my 5th project since starting painting classes' (s1 t0). Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "603deb26",
+   "tier": "alternate",
+   "rank": 7,
+   "entity": "user",
+   "attribute": "negroni_attempts_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "5 times",
+   "new_value": "10 times",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 6,
+     "value": "10 times"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "10 times"
+    }
+   ],
+   "probe_question": "How many times has the user tried making a Negroni at home since their friend Emma showed them how?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've tried making it at home for 5 times now since Emma teached me' (s0 t4 \u2014 sic, corpus grammar). New: 'I've tried making it at home 10 times now' (s1 t0), restated verbatim s1 t6 and t10 (corpus duplication artifact \u2014 both protected). Counter -> aux-key speculation. Session 0 has 10 turns."
+  },
+  {
+   "question_id": "cc5ded98",
+   "tier": "alternate",
+   "rank": 8,
+   "entity": "user",
+   "attribute": "daily_coding_exercise_duration",
+   "attribute_class": "duration",
+   "old_value": "about an hour each day",
+   "new_value": "about two hours each day",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 6,
+     "value": "about two hours each day"
+    }
+   ],
+   "probe_question": "How much time does the user dedicate to coding exercises each day?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'I've been dedicating about an hour each day to coding exercises' (s0 t4). New: 'about two hours each day' (s1 t0), restated s1 t6. This is a chosen daily-time-budget (volitional), unlike elapsed-time durations: gold-key speculation natural ('considering bumping it to three hours'). Session 1 has 10 turns."
+  },
+  {
+   "question_id": "5831f84d",
+   "tier": "alternate",
+   "rank": 9,
+   "entity": "user",
+   "attribute": "crash_course_videos_watched_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "10 videos (superseded within-session by 12 at s0 t8)",
+   "new_value": "15 videos",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 8,
+     "value": "12 videos (within-session progression)"
+    }
+   ],
+   "probe_question": "How many Crash Course videos has the user watched in the past few weeks?",
+   "speculation_compatible": false,
+   "notes": "Verified. WITHIN-SESSION PROGRESSION (not noted in dataset_analysis): s0 t0 says 10 videos (marked), s0 t8 says 'just finished my 12th video' (unmarked) \u2014 a legitimate intermediate update. For correction-residue scoring, BOTH 10 and 12 count as stale-old; for staleness curves the store should read 12 at the s0 boundary. Both turns adjacency-protected. New: 'having watched 15 Crash Course videos in the past few weeks' (s1 t0). Counter -> aux-key speculation. Session 1 has 10 turns."
+  },
+  {
+   "question_id": "c7dc5443",
+   "tier": "alternate",
+   "rank": 10,
+   "entity": "user",
+   "attribute": "volleyball_league_record",
+   "attribute_class": "numeric_score",
+   "old_value": "3-2",
+   "new_value": "5-2",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "What is the current record of the user's team in the recreational volleyball league?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'we're 3-2 so far!' (s0 t0). New: 'our volleyball team, the Net Ninjas, is doing well with a 5-2 record' (s1 t0). PERSISTENT UNRESOLVED HEDGE in both t0 turns: 'I'm thinking about signing up for a triathlon in the fall' appears in s0 t0 AND s1 t0 \u2014 the corpus's best natural continued-speculation exemplar; reserve as register template for Test 3 distractor D1 (injector_spec 9.5) and as a natural Test 1 speculative item. Non-volitional record -> aux-key speculation."
+  },
+  {
+   "question_id": "ba61f0b9",
+   "tier": "alternate",
+   "rank": 11,
+   "entity": "rachel_former_manager_team",
+   "attribute": "women_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "5 women (of 10)",
+   "new_value": "6 women (of 10)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 8,
+     "value": "5 women"
+    }
+   ],
+   "probe_question": "How many women are on the team led by the user's former manager Rachel?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old is ARITHMETIC-IMPLICIT: 'leading a team of 10 people ... half of them are women' (s0 t2) = 5; explicit '5 women' at s0 t8 (unmarked). New: 'with 6 women out of 10 people' (s1 t0). Third-party entity (rule 1.5g); second-hand assertions (rule 1.5c: asserted fact -> completed-event force). 183-day gap. A second-hand speculation ('Rachel mentioned she's hiring...') is viable but not required -> keep aux-key default."
+  },
+  {
+   "question_id": "dad224aa",
+   "tier": "alternate",
+   "rank": 12,
+   "entity": "user",
+   "attribute": "saturday_wake_time",
+   "attribute_class": "time_of_day",
+   "old_value": "8:30 am",
+   "new_value": "7:30 am",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 4,
+     "value": "8:30 am"
+    }
+   ],
+   "probe_question": "What time does the user wake up on Saturday mornings?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'I've been waking up around 8:30 am on Saturdays' (s0 t2), restated s0 t4. New: 'I like to wake up at 7:30 am on Saturdays' (s1 t2). Volitional routine: v_spec = a time not in {7:30 am, 8:30 am}. 4-day gap."
+  },
+  {
+   "question_id": "ed4ddc30",
+   "tier": "alternate",
+   "rank": 13,
+   "entity": "household",
+   "attribute": "eggs_stocked_dozen_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "30 dozen",
+   "new_value": "20 dozen",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "How many dozen eggs does the household currently have stocked in the refrigerator?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'we have a lot stocked up in the fridge - 30 dozen at the moment!' (s0 t2). New: 'we've got 20 dozen stocked up in the fridge right now' (s1 t2). Entity = household ('we', farm persona). DOWNWARD drift (inventory consumed) \u2014 the only decreasing counter in the set; good judge test. Fluctuating inventory -> aux-key speculation."
+  },
+  {
+   "question_id": "b6019101",
+   "tier": "alternate",
+   "rank": 14,
+   "entity": "user",
+   "attribute": "mcu_films_watched_3mo_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "4 MCU films",
+   "new_value": "5 MCU films",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many MCU films has the user watched in the last 3 months?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've actually watched 4 MCU films in the last 3 months' (s0 t4). New: 'I've watched 12 films in the last 3 months, including 5 MCU films' (s1 t0 \u2014 12 total films is a SEPARATE attribute; keep keys distinct, collision-audit test case). Windowed counter (moving 3-month window \u2014 value can legitimately drift without an event) -> aux-key speculation; note windowed semantics for the equivalence judge. Session 1 has 10 turns."
+  },
+  {
+   "question_id": "8fb83627",
+   "tier": "alternate",
+   "rank": 15,
+   "entity": "user",
+   "attribute": "natgeo_issues_finished_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "3 issues finished (on the 4th)",
+   "new_value": "5 issues finished",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 6
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 10,
+     "value": "3 finished, on 4th"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 2,
+     "value": "5 issues finished"
+    }
+   ],
+   "probe_question": "How many issues of National Geographic has the user finished reading?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I just finished my third issue, and I'm currently on my fourth' (s0 t2, marked; hedged-recall restatement at s0 t10, ALSO MARKED: 'I remember finishing three issues'). New: 'I've finished five issues so far' (s1 t2, unmarked) precedes marked s1 t6 ('I just finished my fifth issue') \u2014 t_L = s1 t2 for TTC per P5 (earliest licensing turn). Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "6aeb4375",
+   "tier": "alternate",
+   "rank": 16,
+   "entity": "user",
+   "attribute": "korean_restaurants_tried_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "3 restaurants",
+   "new_value": "4 restaurants",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 8
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "How many Korean restaurants has the user tried in their city?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've tried three different ones recently' (s0 t8). New: 'I've tried four different ones so far' (s1 t2). RUBRIC-OVERLAP HOLDOUT (P9/C4): protocol_spec 1.4 positive example #1 is a PARAPHRASE of s1 t2 (critique C4) \u2014 exclude items keyed (6aeb4375, 1, 2) from the Test 1 eval set by ID, never by surface text. Counter -> aux-key speculation."
+  },
+  {
+   "question_id": "830ce83f",
+   "tier": "alternate",
+   "rank": 17,
+   "entity": "user_friend_rachel",
+   "attribute": "home_location",
+   "attribute_class": "location",
+   "old_value": "a new apartment in the city (Chicago)",
+   "new_value": "the suburbs (moved back)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 2,
+     "value": "recently moved to a new apartment in the city"
+    }
+   ],
+   "probe_question": "Where does the user's friend Rachel currently live?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old evidence is SPLIT ACROSS TWO MARKED TURNS: s0 t2 ('my friend Rachel who recently moved to a new apartment in the city') + s0 t4 ('She moved to Chicago.' \u2014 a bare 2-word turn; extractor anaphora test). New: 'My friend Rachel actually just moved back to the suburbs again' (s1 t2). RUBRIC-OVERLAP HOLDOUT (P9/C4): protocol_spec 1.2 positive example #3 quotes s1 t2 \u2014 exclude (830ce83f, 1, 2) by ID. Third-party entity (rule 1.5g); second-hand deliberation speculation is natural ('Rachel's been talking about moving downtown again') per rule 1.5c -> speculation_compatible true, v_spec = a location not in {Chicago, the city, suburbs} and absent from transcript (Florida/Colorado/Fort Myers are trip talk \u2014 exclude those strings too)."
+  },
+  {
+   "question_id": "d7c942c3",
+   "tier": "alternate",
+   "rank": 18,
+   "entity": "user_mom",
+   "attribute": "grocery_list_method",
+   "attribute_class": "categorical",
+   "old_value": "old paper list (not the app)",
+   "new_value": "the same grocery list app as the user",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 8
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 4
+   },
+   "extra_evidence": [],
+   "probe_question": "What grocery list method does the user's mom currently use?",
+   "speculation_compatible": true,
+   "notes": "Verified. Old: 'I've been trying to get my mom to use it too, but she's still stuck on her old paper list' (s0 t8). New: 'my mom is actually using the same grocery list app as me now' (s1 t4). Third-party entity (rule 1.5g); oracle answer 'Yes' is to the boolean question \u2014 the store key holds the method value, and the equivalence judge maps 'same app as user' correctly. Second-hand speculation natural ('mom said she might switch to <app>') -> compatible; v_spec = a named method/app absent from transcript."
+  },
+  {
+   "question_id": "b01defab",
+   "tier": "alternate",
+   "rank": 19,
+   "entity": "user",
+   "attribute": "the_nightingale_reading_status",
+   "attribute_class": "status",
+   "old_value": "paused / not finished (intends to get back to it)",
+   "new_value": "finished",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 8,
+     "value": "finished reading recently"
+    }
+   ],
+   "probe_question": "What is the user's current progress status on 'The Nightingale' by Kristin Hannah?",
+   "speculation_compatible": false,
+   "notes": "Verified. Old: 'I've been meaning to get back to \"The Nightingale\" ... which I put down temporarily' (s0 t2 \u2014 the old value is itself an INTENT; dataset_analysis flags this; the intent tuple is speculative-class, the paused-status tuple is the stored fact). New: 'I also recently finished \"The Nightingale\"' (s1 t0), restated s1 t8. This is the corpus's NATURAL STAGED->RESOLVED PAIR (intent 2023/01/21 -> completion 2023/03/30, 68 days): reserve as the Test 3 validation garnish (natural promote case), per dataset_analysis section 1. Do not inject speculation on the gold key (the natural intent already occupies it)."
+  },
+  {
+   "question_id": "07741c45",
+   "tier": "v2_clean",
+   "entity": "user",
+   "attribute": "old_sneakers_storage_location",
+   "attribute_class": "location",
+   "old_value": "under the bed",
+   "new_value": "in a shoe rack in the closet",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "shoe rack (near-verbatim unmarked duplicate of s1 t0 \u2014 corpus duplication artifact)"
+    }
+   ],
+   "probe_question": "Where does the user currently keep their old sneakers?",
+   "speculation_compatible": true,
+   "quirks": [
+    "new_value_plan_framed",
+    "shares_sessions_with:07741c44",
+    "duplicate_restatement_artifact"
+   ],
+   "quirk_handling": "Scale-up doc classed this clean, but verification confirms dataset_analysis 1(d): the new-value turn is future-leaning ('I need to organize my closet this weekend, and I'm looking forward to get rid of some of my old sneakers in a shoe rack in it') \u2014 a correct gate may stage it. RECOMMEND protocol author reviews assignment to the benchmark-endorses-speculation stratum (same handling as a2f3aa27 family) before freeze; schema-generated current-value probes measure contamination normally either way. Never co-eval with 07741c44 (identical session content answer_7e9ad7b4_1/2 under different dates); injection bookkeeping must key on session content hash.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      6
+     ],
+     "1": [
+      6
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      8,
+      10
+     ],
+     "1": [
+      4
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'I've been keeping them under my bed for storage, and they're starting to smell' (s0 t2, marked). New: '...get rid of some of my old sneakers in a shoe rack in it [my closet]' (s1 t0, marked; plan-framed), restated near-verbatim UNMARKED at s1 t10 ('storing my old sneakers in a shoe rack'). Volitional storage choice: v_spec = a storage location absent from transcript and not in {under bed, closet shoe rack}; FM-13 exclusion strings also include 'cobbler' and 'charity thrift store' (other shoe destinations in-transcript). HOST SCARCITY: only s0 t6 / s1 t6 fully clean; s0 t8/t10 and s1 t4 mention closet/sneakers without the value (host with caution). Oracle answer: 'in a shoe rack in my closet'."
+  },
+  {
+   "question_id": "0ddfec37",
+   "tier": "v2_clean",
+   "entity": "user",
+   "attribute": "autographed_baseballs_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "15 (as of the first three months of collecting)",
+   "new_value": "20",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many autographed baseballs does the user currently have in their collection?",
+   "speculation_compatible": false,
+   "quirks": [
+    "benchmark_question_time_indexed_to_old_value"
+   ],
+   "quirk_handling": "The benchmark question asks the FIRST-three-months count (gold answer 15 = the old value) \u2014 behaves like the asks-old-value stratum for the benchmark's own QA probe (supersession-with-history keeps it answerable; overwrite destroys it). The schema current-value probe measures contamination normally. Scale-up doc classed this clean; discrepancy recorded (notes doc F2).",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      4,
+      6,
+      8,
+      10
+     ],
+     "1": [
+      4,
+      6
+     ]
+    },
+    "value_adjacent": {
+     "1": [
+      8
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'that's 15 autographed baseballs since I started collecting three months ago!' (s0 t0, marked, 2023/07/11). New: 'I've added 20 autographed baseballs to my collection in the past few months' (s1 t0, marked, 2023/12/30). NATURAL HEDGE ON GOLD KEY at s1 t8: 'I'm thinking of selling some of my autographed baseballs' (unresolved deliberation \u2014 free Test-1 speculative item; PC-1 distractor material; protect as value-adjacent). Cumulative counter -> aux-key speculation. Other collections in-transcript (error coins, vinyl, Leica cameras, stamps) are SEPARATE attributes \u2014 collision-audit test case. FM-13: v_a/v_b differ from {15, 20}, plausible magnitude."
+  },
+  {
+   "question_id": "42ec0761",
+   "tier": "v2_clean",
+   "entity": "user",
+   "attribute": "spare_laptop_screwdriver_status",
+   "attribute_class": "status",
+   "old_value": "misplaced / none available (plans to buy one)",
+   "new_value": "has a spare (picked up while organizing computer desk)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 6
+   },
+   "extra_evidence": [],
+   "probe_question": "Does the user currently have a spare screwdriver for opening up their laptop?",
+   "speculation_compatible": false,
+   "quirks": [
+    "natural_correction_new_evidence",
+    "natural_stage_resolution_arc"
+   ],
+   "quirk_handling": "The new-value turn is a natural correction-flavored resolution ('I actually have a spare screwdriver... so I'm all set there') that retro-invalidates the s0 t4 purchase intent \u2014 dataset_analysis 1(c) lists it among the ~3 natural KU corrections. The s0 t4 intent -> s1 t6 resolution (4 days) is a NATURAL staging->resolution arc: preregister under the V2-P9 natural resolution endpoint. speculation_compatible=false for a mechanical reason: boolean possession slot \u2014 any speculative acquisition value collides with new_value 'yes' (FM-13 novelty unattainable on the gold key); speculation budget goes to aux keys.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      0,
+      8,
+      10
+     ],
+     "1": [
+      0,
+      10
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'I realized I misplaced the small screwdriver I use for that. I'll need to pick one up next time I'm out' (s0 t4, marked). Intent continues UNMARKED at s0 t6 ('I'll probably check out the electronics store near my place') \u2014 protected by adjacency to t4. s1 t4 asks the gold-key question ('do I have a spare screwdriver for that?') \u2014 protected by adjacency to t6. New: 'I actually have a spare screwdriver that I picked up when I organized my computer desk a while back, so I'm all set there' (s1 t6, marked). Oracle answer: Yes."
+  },
+  {
+   "question_id": "5a4f22c0",
+   "tier": "v2_clean",
+   "entity": "user_colleague_rachel",
+   "attribute": "current_employer",
+   "attribute_class": "categorical",
+   "old_value": "(implicit) former colleague at the user's previous company; NO explicit prior current-employer value",
+   "new_value": "TechCorp",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "What company does Rachel, the user's old colleague from their previous company, currently work at?",
+   "speculation_compatible": true,
+   "quirks": [
+    "old_value_implicit_establish_only"
+   ],
+   "quirk_handling": "s0 t2 establishes the entity and relationship ('I met Rachel, an old colleague from my previous company, at the TechConnect conference') \u2014 it does NOT assert a current employer; 'old colleague' implies she may have left. Usable for speculation-contamination probes (crisp gold current value TechCorp); WEAK for correction-residue stale-old scoring (no crisp old reference value) \u2014 exclude from stale-old denominators, keep in speculation denominators. Entity name disambiguation is mandatory: user_colleague_rachel here vs user's manager Rachel (031748ae) vs user_friend_rachel (830ce83f) \u2014 per-substrate stores prevent collision but canonical names must stay distinct (collision-audit test case).",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      10
+     ],
+     "1": [
+      4,
+      6,
+      8,
+      10
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      6,
+      8
+     ]
+    }
+   },
+   "notes": "Verified. Third-party entity (rule 1.5g); second-hand assertions carry completed-event force per rule 1.5c. New: 'catching up with Rachel, an old colleague from my previous company, who's currently at TechCorp' (s1 t0, marked). Second-hand deliberation speculation natural ('Rachel mentioned she's interviewing at <company>'). FM-13 exclusions: {TechCorp, StartupX, Google, WeWork, BNI}; conference/person names (TechConnect, Jason, Alex, David, Tom, Dr. Maria Hernandez, Jack) are separate facts. Oracle answer: TechCorp. 1-day session gap."
+  },
+  {
+   "question_id": "6a27ffc2",
+   "tier": "v2_clean",
+   "entity": "user",
+   "attribute": "corey_schafer_python_videos_completed_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "20 videos",
+   "new_value": "30 videos",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "30 videos (unmarked restatement: 'I've completed 30 videos of Corey Schafer's Python series')"
+    }
+   ],
+   "probe_question": "How many videos of Corey Schafer's Python programming series has the user completed?",
+   "speculation_compatible": false,
+   "quirks": [],
+   "quirk_handling": "",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      4,
+      6,
+      8,
+      10
+     ],
+     "1": [
+      6
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'I've completed 20 videos so far' (s0 t0, marked). New: 'I've completed 30 videos so far for Corey's series' (s1 t2, marked), restated UNMARKED at s1 t10 \u2014 both adjacency-protected. s1 t0 mentions the series with no count (protected by adjacency to t2). Cumulative counter -> aux-key speculation. 3-day gap. Oracle answer: 30."
+  },
+  {
+   "question_id": "7a87bd0c",
+   "tier": "v2_clean",
+   "entity": "user",
+   "attribute": "daily_tidying_routine_duration",
+   "attribute_class": "duration",
+   "old_value": "3 weeks",
+   "new_value": "4 weeks",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 8,
+     "value": "3 weeks (unmarked restatement: 'now that I've been doing it for 3 weeks')"
+    }
+   ],
+   "probe_question": "How long has the user been sticking to their daily tidying routine?",
+   "speculation_compatible": false,
+   "quirks": [
+    "stated_duration_inconsistent_with_calendar"
+   ],
+   "quirk_handling": "Stated durations are inconsistent with the 111-day session gap (3 weeks on 2023/06/11 -> 4 weeks on 2023/09/30). Same handling as pilot 2133c1b5: score against stated strings, never recomputed dates.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      4
+     ],
+     "1": [
+      4,
+      6,
+      8
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'sticking to my daily tidying routine - it's already been 3 weeks!' (s0 t0, marked), restated UNMARKED at s0 t8. New: 'I've been sticking to my daily tidying routine for 4 weeks now' (s1 t0, marked). s0 t10 mentions the routine's supplies without a duration value. Elapsed-time duration -> aux-key speculation. Oracle answer: 4 weeks."
+  },
+  {
+   "question_id": "89941a94",
+   "tier": "v2_clean",
+   "entity": "user",
+   "attribute": "bikes_owned_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "3 (road, mountain, commuter)",
+   "new_value": "4 (road, mountain, commuter, new hybrid)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 4
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 6,
+     "value": "3 ('By the way, I currently have three bikes' \u2014 unmarked explicit restatement; MISSED by the pilot 89941a93 value scan, whose regex lacked 'three bikes')"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 6,
+     "value": "hybrid bike mention ('trying out my new hybrid bike', unmarked)"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "hybrid bike mention ('platform pedals on my hybrid bike', unmarked)"
+    }
+   ],
+   "probe_question": "How many bikes does the user currently own?",
+   "speculation_compatible": true,
+   "quirks": [
+    "shares_sessions_with:89941a93",
+    "benchmark_question_history_flavored",
+    "question_transcript_mismatch_gravel_vs_hybrid",
+    "host_slot_scarcity"
+   ],
+   "quirk_handling": "(1) Session CONTENT identical to pilot core substrate 89941a93 (different haystack_dates) \u2014 never place both in one eval set; key perturbation bookkeeping on session content hash. (2) The benchmark question asks about the PRE-purchase state ('Before I purchased..., do I have other bikes...?' -> Yes, a road bike) \u2014 history/provenance diagnostic; schema current-count probe measures contamination normally. (3) Question says 'gravel bike' but the transcript says 'hybrid bike' \u2014 treat hybrid as the referent; the equivalence judge must not require the string 'gravel'. (4) HOST SCARCITY: audited clean slots = s0 t10 only (s1 has none clean; s0 t0 / s1 t0 usable with caution) \u2014 cap injections at 1-2 and prefer other substrates for overflow.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      10
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      0
+     ],
+     "1": [
+      0
+     ]
+    }
+   },
+   "notes": "Verified (same evidence turns as 89941a93). Old is ARITHMETIC-IMPLICIT at s0 t4 ('using it along with my other two bikes, a mountain bike and a commuter bike' = 3) but EXPLICIT unmarked at s0 t6 ('I currently have three bikes') \u2014 v2 scan finding; pilot 89941a93 entry has extra_evidence [] (gap documented in lme_schema_v2_notes.md F4; pilot file frozen, not edited). New: 'I'll actually have four bikes with me... a new hybrid bike I just purchased' (s1 t4, marked). v_spec = a count not in {3,4} with a named bike type absent from transcript (hybrid/road/mountain/commuter/gravel excluded). Oracle answer: 'Yes. (You have a road bike too.)'."
+  },
+  {
+   "question_id": "9ea5eabc",
+   "tier": "v2_clean",
+   "entity": "user",
+   "attribute": "most_recent_family_trip_destination",
+   "attribute_class": "categorical",
+   "old_value": "Hawaii",
+   "new_value": "Paris",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 8
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 2,
+     "value": "Paris ('we just went there as a family last month' \u2014 UNMARKED FIRST assertion; t_L = s1 t2 per P5/M12 earliest-licensing rule)"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 6,
+     "value": "Paris ('since I recently went to Paris with my family', unmarked)"
+    },
+    {
+     "session_idx": 0,
+     "turn_idx": 4,
+     "value": "Hawaii-trip detail ('explore Waikiki', unmarked old-trip restatement)"
+    }
+   ],
+   "probe_question": "Where did the user go on their most recent family trip?",
+   "speculation_compatible": true,
+   "quirks": [
+    "chronology_loose_across_sessions",
+    "role_play_artifact_turn",
+    "host_slot_scarcity"
+   ],
+   "quirk_handling": "(1) s0 (2023/05/29) calls the Hawaii trip 'recent'; s1 (2023/05/30, next day) says the Paris family trip was 'last month' \u2014 chronologically loose; score stated strings; 'most recent trip' is a supersession-typed pointer (41698283 precedent: each trip legitimately overwrites). (2) s0 t8 contains a corpus role-play artifact ('(Note: Please respond as the assistant. I will then respond as the user.)') \u2014 it is the ONLY clean s0 host slot; if used as an injection host, strip nothing, but flag the artifact in the manifest row. (3) Injected trip-speculations must use same/next-day horizon in s0->s1 and avoid all mentioned destinations.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      8
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      10
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'my recent family trip to Hawaii and how we had a great time snorkeling' (s0 t2, marked). New value FIRST appears UNMARKED at s1 t2 before the marked s1 t8 ('Since I've been thinking about my recent family trip to Paris...') \u2014 both adjacency-protected; t_L = s1 t2. Volitional (family can plan trips): v_spec = a destination absent from transcript; FM-13 exclusions {Hawaii, Waikiki, Paris, Tokyo, Japan, Europe}. Solo-trip talk (Tokyo) is a SEPARATE attribute (most recent family trip vs planned solo trip) \u2014 collision-audit test case. Oracle answer: Paris."
+  },
+  {
+   "question_id": "c4ea545c",
+   "tier": "v2_clean",
+   "entity": "user",
+   "attribute": "gym_sessions_per_week",
+   "attribute_class": "frequency",
+   "old_value": "3 times per week (Tuesdays, Thursdays, Saturdays)",
+   "new_value": "4 times per week",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How often does the user currently go to the gym?",
+   "speculation_compatible": true,
+   "quirks": [
+    "benchmark_question_direction_of_change",
+    "old_evidence_is_natural_correction",
+    "rubric_anchor_holdout"
+   ],
+   "quirk_handling": "(1) Benchmark question is comparative ('Do I go to the gym more frequently than I did previously?' -> Yes) \u2014 needs old AND new: history/provenance diagnostic; schema current-frequency probe measures contamination normally. Scale-up doc classed this clean; form discrepancy recorded (notes F9). (2) The old-evidence turn is the corpus's canonical natural rule-(e) correction (user corrects the assistant's stated belief about tracked user state) and is QUOTED as protocol_spec 1.3 positive example #2 \u2014 RUBRIC-OVERLAP HOLDOUT: exclude eval items keyed (c4ea545c, 0, 4) from Test-1-style eval sets by ID (P9/C4). It remains a prime natural-correction exhibit for the FM-2 natural stratum via its store-level behavior. (3) gym_days (Tue/Thu/Sat) is a SEPARATE attribute from gym_sessions_per_week \u2014 collision-audit test case (59524333 precedent); s1 t10's 'Fridays for admin tasks and Sundays for meal prep' is calendar vocabulary that must NOT map to gym keys (near-miss material).",
+   "rubric_anchor_holdout": [
+    [
+     0,
+     4
+    ]
+   ],
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      0,
+      8,
+      10
+     ],
+     "1": [
+      4,
+      6
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'But I don't actually work out on Mondays, Wednesdays, and Fridays. I go to the gym on Tuesdays, Thursdays, and Saturdays' (s0 t4, marked \u2014 natural correction; the corrected-away M/W/F days are FM-13 excluded strings too). New: 'I've been consistent with my gym routine - four times a week, actually' (s1 t0, marked). Volitional schedule: v_spec = a frequency not in {3x, 4x per week}. 75-day gap. Oracle answer: Yes (more frequently)."
+  },
+  {
+   "question_id": "50635ada",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "united_frequent_flyer_status",
+   "attribute_class": "categorical",
+   "old_value": "Premier Silver",
+   "new_value": "Premier Gold",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "What is the user's current frequent flyer status on United Airlines?",
+   "speculation_compatible": false,
+   "quirks": [
+    "benchmark_question_asks_old_value"
+   ],
+   "quirk_handling": "Benchmark asks the PREVIOUS status (gold answer Premier Silver = old value). The (entity, attribute, old, new) tuple is intact; schema-generated current-status probes measure contamination normally; the benchmark's own question becomes a provenance/history diagnostic (write-through-with-overwrite destroys the answer; supersession-with-history keeps it) \u2014 scaleup 1(a) handling rule.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      0,
+      8,
+      10
+     ],
+     "1": [
+      8,
+      10
+     ]
+    },
+    "value_adjacent": {
+     "1": [
+      6
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'I actually just hit 20,000 miles on United Airlines, which means I'm finally eligible for Premier Silver status' (s0 t4, marked, 2022/09/16 \u2014 ELIGIBILITY phrasing; benchmark gold treats it as attained; score stated strings). New: 'I just reached Premier Gold status' (s1 t2, marked, 2023/05/30). 256-day gap \u2014 the longest span among the 67. Status is earned, not chosen: a future-status statement is a goal/prediction (rubric 1.4) -> aux-key speculation. FM-13 exclusions {Premier Silver, Premier Gold, Premier Platinum (s1 t6), 20,000 miles}. s1 t6 mentions Premier Platinum (value-adjacent host)."
+  },
+  {
+   "question_id": "e66b632c",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "charity_5k_personal_best",
+   "attribute_class": "numeric_time",
+   "old_value": "27 minutes and 45 seconds",
+   "new_value": "26 minutes and 30 seconds",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 8
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 2,
+     "value": "PB-beaten event ('was happy to beat my personal best time - shaved off about a minute and a half from my previous record' \u2014 UNMARKED completed-event licensing turn; value arithmetic-implicit; t_L = s1 t2 per P5)"
+    }
+   ],
+   "probe_question": "What is the user's current personal best time for the charity 5K run?",
+   "speculation_compatible": false,
+   "quirks": [
+    "benchmark_question_asks_old_value",
+    "arithmetic_inconsistent_licensing_turn"
+   ],
+   "quirk_handling": "(1) Benchmark asks the PREVIOUS PB (gold answer 27:45 = old value) \u2014 asks-old-value handling (history diagnostic; schema probe normal). (2) The earliest licensing turn s1 t2 implies 27:45 - 1:30 = ~26:15, but the explicit marked value at s1 t8 is 26:30 \u2014 corpus arithmetic looseness; score against stated strings (26:30); TTC t_L = s1 t2 (the event assertion licenses revision even with an approximate value; the crisp value lands at t8).",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      8,
+      10
+     ],
+     "1": [
+      0,
+      4
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      6
+     ],
+     "1": [
+      2
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'I've recently completed a charity 5K run with a personal best time of 27 minutes and 45 seconds' (s0 t2, marked). New: '...the one where I finished with a personal best time of 26 minutes and 30 seconds?' (s1 t8, marked \u2014 delivered inside a question to the assistant; assertion force still present). Non-volitional PB -> aux-key speculation (6a1eabeb precedent). DISTINCT persona/substrate from 6a1eabeb's charity_5k_personal_best (27:12 -> 25:50) \u2014 never cross-map. FM-13 exclusions {27:45, 26:30, ~26:15, 9:30/mile pace, 55 minutes (10K goal), June 24th triathlon}."
+  },
+  {
+   "question_id": "9bbe84a2",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "apex_legends_level_goal",
+   "attribute_class": "numeric_goal",
+   "old_value": "level 100 (before the end of the year)",
+   "new_value": "level 150 (eventually)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 4
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 2,
+     "value": "level 150 (unmarked PRE-ECHO in question form: 'focus on ranking up to level 150, or should we just play for fun...?')"
+    },
+    {
+     "session_idx": 1,
+     "turn_idx": 8,
+     "value": "level 150 (unmarked restatement: 'my current goal is to reach level 150')"
+    }
+   ],
+   "probe_question": "What is the user's current goal for their Apex Legends level?",
+   "speculation_compatible": true,
+   "quirks": [
+    "benchmark_question_asks_old_value",
+    "goal_valued_attribute",
+    "host_slot_scarcity_s1"
+   ],
+   "quirk_handling": "(1) Benchmark asks the PREVIOUS goal (gold answer level 100 = old value) \u2014 asks-old-value handling. (2) GOAL-VALUED ATTRIBUTE: the tracked slot's VALUE is itself a goal. Rubric 1.4 classes 'my goal is X' as an additive observed fact about the goal \u2014 which is exactly what updates this slot; gate semantics are NOT penalized here (goal-set statements are assertoric about the goal). Do not confuse the slot value being a goal with the statement class being speculative. (3) s1 has ZERO clean host slots after audit (value turns t2/t4/t8 protect everything) \u2014 all injections go to s0 (t6 clean; t4/t8/t10 value-adjacent), cap at 1-2.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      6
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      4,
+      8,
+      10
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'I'm determined to reach level 100 before the end of the year' (s0 t0, marked). New: 'I'm still aiming to hit level 150 eventually' (s1 t4, marked), pre-echoed unmarked at s1 t2 and restated unmarked at s1 t8. Deadline component also changed (end-of-year -> eventually); equivalence judging keys on the level number. Goal slot is volitionally revisable: v_spec = a level not in {100, 150} ('thinking of raising my goal to level 200' shape). FM-13 exclusions {100, 150}."
+  },
+  {
+   "question_id": "0977f2af",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "most_recent_kitchen_gadget_purchase",
+   "attribute_class": "categorical",
+   "old_value": "Instant Pot",
+   "new_value": "Air Fryer (got yesterday)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [],
+   "probe_question": "What kitchen gadget did the user purchase most recently?",
+   "speculation_compatible": true,
+   "quirks": [
+    "benchmark_question_asks_old_value",
+    "same_calendar_day_sessions"
+   ],
+   "quirk_handling": "(1) Benchmark asks the gadget BEFORE the Air Fryer (gold answer Instant Pot = old value) \u2014 asks-old-value handling. (2) Sessions are 22h apart on the SAME calendar day (2023/05/21 00:05 and 22:02): injected phrasings must use same-day horizons ('earlier today', 'this morning'); multi-week staged arcs are chronology violations here (scaleup sec 2 constraint).",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      6,
+      8,
+      10
+     ],
+     "1": [
+      6,
+      8,
+      10
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'I'm actually thinking of using my new Instant Pot to make some of these soups and stews' (s0 t2, marked \u2014 the HEDGE is about usage; possession is asserted via 'my new Instant Pot': acquisition completed). New: 'the Air Fryer I got yesterday' (s1 t2, marked \u2014 completed acquisition). 'Most recent purchase' is supersession-typed (41698283 precedent). Volitional purchases: v_spec = a kitchen gadget absent from transcript; FM-13 exclusions {Instant Pot, Air Fryer}."
+  },
+  {
+   "question_id": "dfde3500",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "language_exchange_meeting_day",
+   "attribute_class": "weekday_slot",
+   "old_value": "Wednesday (with tutor Juan)",
+   "new_value": "Thursday (with tutor Maria)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 8
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 0,
+     "value": "tutor Maria established ('a language exchange session with my tutor Maria this week', unmarked)"
+    }
+   ],
+   "probe_question": "On what day of the week does the user currently meet their language exchange tutor?",
+   "speculation_compatible": true,
+   "quirks": [
+    "benchmark_question_asks_old_value",
+    "same_calendar_day_sessions_6_minutes",
+    "entangled_tutor_change",
+    "old_session_zero_host_slots",
+    "natural_hedged_recall_stratum"
+   ],
+   "quirk_handling": "(1) Benchmark asks the day with the PREVIOUS tutor (gold answer Wednesday = old value) \u2014 supersession history must retain the (day, tutor) ASSOCIATION, not just the day: the answer requires joining old day to old tutor (companion key language_exchange_tutor: Juan -> Maria; keep keys distinct \u2014 collision-audit test case). (2) Sessions are 6 MINUTES apart (2023/05/26 01:49 / 01:55 \u2014 the corpus extreme): every injected phrasing must be same-conversation-hour plausible; NO cross-session staged arcs. (3) s0 has ZERO clean host slots after audit (t0/t2/t4/t6 are gold-key questions/hedged recall, t8 evidence; e61a7584-style C-GOLD unavailable \u2014 no post-old-evidence slot in s0). All injections go to s1 t6/t8/t10. (4) s0 t0/t4/t6 are NATURAL HEDGED-RECALL items about the old value ('Is it Tuesday or Thursday?', 'I'm pretty sure it's not Thursday') \u2014 prime S3-stratum (confidence-vs-evidence divergence) natural material for Test-1-style class floors.",
+   "audited_host_slots": {
+    "clean": {
+     "1": [
+      6,
+      8,
+      10
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      0
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'We meet every Wednesday evening... My language exchange class with Juan is on Wednesday evening' (s0 t8, marked; resolves the in-session hedged recall arc t0->t4->t6). New: 'I'm actually meeting Maria on Thursday,.' (s1 t2, marked \u2014 corpus typo comma; 'actually' reads as correcting the ASSISTANT's prior-turn confusion; tutor changed to Maria at s1 t0). v_spec = a weekday not in {Wednesday, Thursday, Tuesday} (Tuesday appears in the s0 t4 hedge \u2014 FM-13 excluded). Oracle answer: Wednesday."
+  },
+  {
+   "question_id": "07741c44",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "old_sneakers_storage_location",
+   "attribute_class": "location",
+   "old_value": "under the bed",
+   "new_value": "in a shoe rack in the closet",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 10,
+     "value": "shoe rack (near-verbatim unmarked duplicate of s1 t0 \u2014 corpus duplication artifact)"
+    }
+   ],
+   "probe_question": "Where does the user currently keep their old sneakers?",
+   "speculation_compatible": true,
+   "quirks": [
+    "benchmark_question_asks_old_value",
+    "shares_sessions_with:07741c45",
+    "new_value_plan_framed",
+    "duplicate_restatement_artifact"
+   ],
+   "quirk_handling": "(1) Benchmark asks where the sneakers were INITIALLY kept (gold answer 'under my bed' = old value) \u2014 asks-old-value handling (history diagnostic; schema probe normal). (2) Session content is IDENTICAL to 07741c45 (session ids answer_7e9ad7b4_1/2) under different haystack_dates (2023/08/11, 2023/11/30 here vs 05/20, 05/26 there) \u2014 at most ONE of the pair per eval set; perturbation bookkeeping must key on session content hash (P12). (3) New value plan-framed \u2014 same caveat as 07741c45.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      6
+     ],
+     "1": [
+      6
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      8,
+      10
+     ],
+     "1": [
+      4
+     ]
+    }
+   },
+   "notes": "Verified identical evidence turns to 07741c45 (old s0 t2 'under my bed'; new s1 t0 'shoe rack in it [closet]'; unmarked restatement s1 t10). Oracle answer: 'under my bed'. See 07741c45 for value/FM-13 details."
+  },
+  {
+   "question_id": "a2f3aa27",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "instagram_follower_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "1250 followers",
+   "new_value": "1300 followers (delivered hedged: 'I think I'm close to 1300 now')",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 2
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many Instagram followers does the user currently have?",
+   "speculation_compatible": false,
+   "quirks": [
+    "gold_new_value_hedged",
+    "same_calendar_day_sessions"
+   ],
+   "quirk_handling": "PRIME benchmark-endorses-speculation exhibit (scaleup 1(a)): the gold new value arrives as HEDGED RECALL of current state ('I've been meaning to check my current follower count - I think I'm close to 1300 now') \u2014 under the taxonomy this is S3 hedged recall (class `other`, low-confidence additive), the exact confidence-vs-evidence divergence class; the benchmark commits it as the gold current value. EXCLUDE from the headline gated-vs-ungated contamination rate; report in the preregistered benchmark-endorses-speculation stratum. Sessions 7.8h apart same day \u2014 same-day injection horizon only.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      6,
+      8
+     ],
+     "1": [
+      4,
+      6,
+      8
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'I've got 1250 followers on Instagram now' (s0 t2, marked). New: hedged at s1 t0 (marked). Non-volitional counter (audience-driven) -> aux-key speculation (1cea1afa precedent \u2014 and do NOT confuse this substrate with pilot core 1cea1afa, 500->600; the pilot entry itself carries the cross-reference warning). FM-13 exclusions {1250, 1300}. Oracle answer: 1300."
+  },
+  {
+   "question_id": "7401057b",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "hilton_free_nights_redeemable",
+   "attribute_class": "numeric_counter",
+   "old_value": "one (a single free night's stay)",
+   "new_value": "two",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 4
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "How many free nights can the user currently redeem at any Hilton property with their accumulated points?",
+   "speculation_compatible": false,
+   "quirks": [
+    "gold_new_value_plan_adjacent_partial"
+   ],
+   "quirk_handling": "Scaleup assigns this to the benchmark-endorses-speculation stratum; verification shows the assignment is PARTIAL (dataset_analysis agrees): the count assertion itself is plain assertoric ('I've accumulated enough points for two free night's stays at any Hilton property') \u2014 only the trailing USE-plan ('so I might use that for a separate trip to Las Vegas') is hedged, and that is a separate tuple. RECOMMENDATION for the protocol author: keep the row in the stratum per the pinned worklist but preregister a with/without-7401057b sensitivity line \u2014 the value tuple is arguably clean and rule-1.5b-analogous (schedule-fact vs implied change).",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      0,
+      8,
+      10
+     ],
+     "1": [
+      4,
+      6,
+      8,
+      10
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'I've accumulated enough points for a single free night's stay at any Hilton property' (s0 t4, marked). New: s1 t0 (marked). Non-volitional (points accrual) -> aux-key speculation. s0 t2 asks the gold-key question (protected by adjacency). FM-13 exclusions {one/single, two}; hotel names (Hilton Lake Las Vegas, Waldorf Astoria, Pullman, Novotel) are separate facts. 8-day gap. Oracle answer: Two."
+  },
+  {
+   "question_id": "c6853660",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "morning_coffee_cup_limit",
+   "attribute_class": "numeric_amount",
+   "old_value": "one cup",
+   "new_value": "two cups",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 1,
+     "turn_idx": 6,
+     "value": "two cups ('Speaking of my morning coffee, I have increased the limit to two cups' \u2014 UNMARKED COMPLETED assertion that RESOLVES the s1 t0 hedge in-session; t_L = s1 t6)"
+    }
+   ],
+   "probe_question": "What is the user's current limit on morning cups of coffee?",
+   "speculation_compatible": false,
+   "quirks": [
+    "gold_new_value_hedged",
+    "benchmark_question_direction_of_change",
+    "natural_stage_resolution_arc_in_session",
+    "host_slot_scarcity_s1"
+   ],
+   "quirk_handling": "(1) The MARKED new-value turn is pure deliberation ('I'm thinking of changing my morning coffee limit to two cups, do you think that's a good idea?') \u2014 the proposal's prime exhibit of the benchmark endorsing speculation; keep OUT of the headline contamination rate per the pinned stratum. (2) NEW v2 FINDING: the hedge RESOLVES in-session \u2014 s1 t6 asserts completion UNMARKED ('I have increased the limit to two cups'). Consequences: (a) this substrate is a NATURAL within-session staging->resolution pair (stage s1 t0 -> resolve s1 t6, lag 3 user turns) for the V2-P9 natural resolution endpoint; (b) a correct gate that stages at t0 and promotes at t6 reaches the gold value with TTC 0 from t_L = s1 t6 \u2014 the gated arm must NOT be penalized on this substrate when scored from t_L. (3) Direction-of-change benchmark question (increase vs decrease) additionally needs history. (4) s1 has ZERO clean host slots (t0/t6 value turns protect all); all injections to s0 t4/t6/t8. (5) speculation_compatible=false: the natural hedge already occupies the gold key (b01defab precedent).",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      4,
+      6,
+      8
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'I've switched to a darker roast and cut back to just one cup in the morning' (s0 t0, marked). New: hedged at s1 t0 (marked), completed at s1 t6 (unmarked). 1-day gap (05/28 -> 05/29). FM-13 exclusions {one cup, two cups, three cups adjacent-plausible values need novelty check}. Oracle answer: 'You increased the limit (from one cup to two cups)'."
+  },
+  {
+   "question_id": "f685340e",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "tennis_frequency",
+   "attribute_class": "frequency",
+   "old_value": "weekly (Sundays)",
+   "new_value": "every other week (Sundays)",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 6,
+     "value": "weekly-instance plan ('I'm planning to play tennis with my friends this Sunday at the local park', unmarked \u2014 establishes the Sunday slot; instance of the old habit)"
+    }
+   ],
+   "probe_question": "How often does the user currently play tennis with their friends at the local park?",
+   "speculation_compatible": true,
+   "quirks": [
+    "benchmark_question_two_part_old_and_new",
+    "gold_new_value_in_plan_clause"
+   ],
+   "quirk_handling": "(1) Two-part benchmark question (old AND new frequency) \u2014 multi-hop history probe; schema current-frequency probe measures contamination normally. (2) The gold new value is smuggled inside a plan sentence: 'I'm planning to play tennis... this Sunday, like we do every other week.' TWO READINGS, both recorded: (a) scaleup/pinned stratum reading \u2014 plan-delivered value, benchmark-endorses-speculation stratum; (b) taxonomy reading \u2014 the 'like we do every other week' clause is an assertoric HABITUAL-state statement, and a habitual assertion conflicting with the stored weekly habit takes rule-1.5d completed-event force (licensed revision), so the row may be scoreable as licensed. The protocol author must pin (a) or (b) at freeze; DEFAULT to (a) (pinned worklist assignment) with a with/without sensitivity line. Companion key tennis_day (Sunday) unchanged \u2014 keep distinct.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      4,
+      10
+     ],
+     "1": [
+      4,
+      6,
+      8
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      6,
+      8
+     ],
+     "1": [
+      10
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'reminds me of my own weekly tennis sessions with friends' (s0 t0, marked, 2023/03/11). New: s1 t0 (marked, 2023/07/30). 141-day gap. Volitional schedule: v_spec = a frequency not in {weekly, every other week}. FM-13 exclusions {weekly, every other week, Sunday}; gear talk (Nike socks, racket, tennis bag) = separate facts; note f685340e_abs is a distinct excluded question. Oracle answer: previously weekly (Sunday); currently every other week (Sunday)."
+  },
+  {
+   "question_id": "031748ae",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "engineers_led_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "4 engineers",
+   "new_value": "5 engineers",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 10
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 2
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 4,
+     "value": "5 engineers (UNMARKED WRONG assertion 'we'll be a group of 5 engineers and a manager' \u2014 self-corrected at s0 t10; NOTE the wrong value 5 EQUALS the later gold new value)"
+    }
+   ],
+   "probe_question": "How many engineers does the user currently lead?",
+   "speculation_compatible": false,
+   "quirks": [
+    "benchmark_question_two_part_old_and_new",
+    "old_evidence_is_natural_self_correction",
+    "wrong_value_equals_later_gold_value"
+   ],
+   "quirk_handling": "(1) Two-part benchmark question (count at role start AND now) \u2014 multi-hop history probe. (2) The old-evidence turn is a natural SELF-correction ('I apologize for the confusion! I lead a team of 4 engineers...') correcting the user's own s0 t4 claim of 5 \u2014 natural-correction candidate for the FM-2 stratum (NOT a rubric anchor; eval-eligible). (3) SCORING TRAP (v2 finding): the corrected-away wrong value (5) EQUALS the later gold new value (5). A store that ignored the s0 t10 correction and kept s0 t4's '5' would spuriously look CORRECT at final probe. Contamination/residue scoring on this substrate MUST use provenance/valid_from intervals (when did 5 enter the store, licensed by which turn), never final-value equality alone. This is also a free correction-residue diagnostic: at the s0 boundary the store must read 4. (4) speculation_compatible=false: the 4/5/6 arithmetic tangle (group of 5 people, 5-engineers wrong claim, 6-person outing in s1 t0) makes injected numeric v_spec collision-prone \u2014 aux-key default (ba61f0b9 precedent).",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      0
+     ],
+     "1": [
+      6,
+      8,
+      10
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: s0 t10 (marked; correction). New: 'I now lead a team of five engineers' (s1 t2, marked). s1 t0 mentions a 6-person outing (5 + manager Rachel arithmetic echo \u2014 do not map to the gold key). Entity note: 'my manager Rachel' here is a THIRD Rachel (vs 5a4f22c0 colleague, 830ce83f friend). FM-13 exclusions {4, 5, 6 in team contexts}. 166-day gap. 031748ae_abs is a distinct excluded question. Oracle answer: 4 then 5."
+  },
+  {
+   "question_id": "6071bd76",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "french_press_coffee_water_ratio",
+   "attribute_class": "ratio",
+   "old_value": "1 tablespoon of coffee per 6 ounces of water",
+   "new_value": "1 tablespoon of coffee per 5 ounces of water",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 0
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [],
+   "probe_question": "What coffee-to-water ratio does the user currently use in their French press?",
+   "speculation_compatible": true,
+   "quirks": [
+    "benchmark_question_direction_of_change"
+   ],
+   "quirk_handling": "Benchmark asks the DIRECTION ('more water per tablespoon, or less?' -> less) \u2014 requires old AND new: history diagnostic; schema current-ratio probe measures contamination normally. Equivalence judging must map 'less water per tablespoon' <-> '5 ounces per tablespoon'; v2 normalization addendum: ratios normalize to '1 tbsp : <n> oz'.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      4,
+      6,
+      8,
+      10
+     ],
+     "1": [
+      4,
+      6,
+      8,
+      10
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'I've found that 1 tablespoon of coffee for every 6 ounces of water is the perfect ratio for me' (s0 t0, marked, 2023/02/11). New: 'I've got my French press ratio down to a science: 1 tablespoon of coffee for every 5 ounces of water' (s1 t0, marked, 2023/06/30). 139-day gap. Volitional recipe choice: v_spec = a ratio not in {1:6, 1:5}. Coffee-subscription and tea talk are separate facts. Distinct persona from c6853660's coffee substrate \u2014 never cross-map. Oracle answer: less water (5 ounces) per tablespoon."
+  },
+  {
+   "question_id": "0f05491a",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "starbucks_gold_level_stars_needed",
+   "attribute_class": "numeric_amount",
+   "old_value": "125 stars",
+   "new_value": "120 stars",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 10
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 6
+   },
+   "extra_evidence": [],
+   "probe_question": "How many stars does the user need to reach the Gold level on their Starbucks Rewards app?",
+   "speculation_compatible": false,
+   "quirks": [
+    "both_evidence_turns_are_corrections",
+    "rubric_anchor_holdout",
+    "assistant_voiced_wrong_values"
+   ],
+   "quirk_handling": "(1) BOTH evidence turns are natural explicit corrections \u2014 the pilot held this substrate out of Test 2 for correction-commit probing; V2-P1 includes it in the 67: use it as the correction-mechanism substrate (correction-commit + retro-invalidation probes), and exclude it from speculation-contamination denominators (no plain-assertion update exists to contaminate against). (2) RUBRIC-OVERLAP HOLDOUT: s0 t10 is protocol_spec 1.3 positive example #1 \u2014 exclude eval items keyed (0f05491a, 0, 10) by ID; s1 t6 is on the section-1.3 'NOT quoted, eval-eligible' list and remains usable. (3) The 125->120 change is E3-undecidable (world change vs record error) -> tiebreak to explicit-correction per E3, flag logged. (4) The wrong values 400 (s0 t9) and 300 (s1 t5) are ASSISTANT-voiced and never user-asserted: under user-only extraction (V2-P3, both arms) they never enter the store \u2014 rule 1.5e boundary case; if any future arm ingests assistant turns, retro-invalidation of 400/300 becomes a scored behavior.",
+   "rubric_anchor_holdout": [
+    [
+     0,
+     10
+    ]
+   ],
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      0,
+      2
+     ],
+     "1": [
+      0,
+      10
+     ]
+    },
+    "value_adjacent": {
+     "0": [
+      4,
+      6
+     ],
+     "1": [
+      2
+     ]
+    }
+   },
+   "notes": "Verified. Old: 'Wait, I apologize for the mistake earlier! To correct myself, I actually need **125 stars** to reach the Gold level on the Starbucks Rewards app, not 400' (s0 t10, marked). New: 'Actually, I need 120 stars to reach the gold level, not 300' (s1 t6, marked). 19-day gap. FM-13 exclusions {120, 125, 300, 400}. Non-volitional program requirement -> aux-key speculation. Oracle answer: 120."
+  },
+  {
+   "question_id": "618f13b2",
+   "tier": "v2_quirked",
+   "entity": "user",
+   "attribute": "black_converse_wear_count",
+   "attribute_class": "numeric_counter",
+   "old_value": "four times",
+   "new_value": "six times",
+   "old_evidence": {
+    "session_idx": 0,
+    "turn_idx": 10
+   },
+   "new_evidence": {
+    "session_idx": 1,
+    "turn_idx": 0
+   },
+   "extra_evidence": [
+    {
+     "session_idx": 0,
+     "turn_idx": 2,
+     "value": "four times (UNMARKED FIRST statement, near-verbatim duplicate of the marked s0 t10 \u2014 corpus duplication artifact; earliest old-value turn)"
+    }
+   ],
+   "probe_question": "How many times has the user worn their new black Converse Chuck Taylor All Star sneakers?",
+   "speculation_compatible": false,
+   "quirks": [
+    "same_calendar_day_sessions_9.6h",
+    "counter_arithmetic_loose",
+    "duplicate_restatement_artifact"
+   ],
+   "quirk_handling": "(1) Sessions are 9.6h apart on the same calendar day (2023/05/24 12:16 -> 21:51): injected phrasings must be same-day plausible; no multi-week arcs (scaleup sec 2; the pilot dataset_analysis 'one same-day pair' record is superseded by the inventory's four \u2014 this is one of them). (2) Counter arithmetic is loose: same-morning '4 times' -> same-evening 'wore them yesterday, so that's six times now' (4 + 1 yesterday-wear = 6 does not add up); score stated strings only. (3) Old value appears twice near-verbatim (s0 t2 unmarked, s0 t10 marked) \u2014 both adjacency-protected.",
+   "audited_host_slots": {
+    "clean": {
+     "0": [
+      6
+     ],
+     "1": [
+      4,
+      6,
+      8,
+      10
+     ]
+    },
+    "value_adjacent": {}
+   },
+   "notes": "Verified. Old: 'I've worn my new black Converse Chuck Taylor All Star sneakers four times already, including to my friend's birthday party last Saturday' (s0 t10, marked; near-verbatim first at s0 t2 unmarked). New: 'I just wore my new black Converse to run some errands yesterday, so that's six times now that I've worn them' (s1 t0, marked). Other shoes in-transcript (Adidas Superstars, brown leather boots, Vans Old Skool) are SEPARATE attributes \u2014 collision-audit material; Vans Old Skool is also a rubric-adjacent string via gpt4_5dcc0aab (different substrate). FM-13 exclusions {four, six}. Counter -> aux-key speculation. Oracle answer: six."
+  }
+ ],
+ "aux_injection_substrates": [
+  {
+   "question_id": "gpt4_59c863d7",
+   "type": "multi-session",
+   "selection_rank": 1,
+   "selection_score": 19,
+   "host_slot_count_strict": 13,
+   "host_term_capped": 12,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 1,
+   "n_sessions": 4,
+   "n_user_turns": 23,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 8,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "46a3abf7",
+   "type": "multi-session",
+   "selection_rank": 2,
+   "selection_score": 16,
+   "host_slot_count_strict": 12,
+   "host_term_capped": 12,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 3,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "60472f9c",
+   "type": "multi-session",
+   "selection_rank": 3,
+   "selection_score": 16,
+   "host_slot_count_strict": 14,
+   "host_term_capped": 12,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 5,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "7024f17c",
+   "type": "multi-session",
+   "selection_rank": 4,
+   "selection_score": 16,
+   "host_slot_count_strict": 14,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 2,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 5,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "d23cf73b",
+   "type": "multi-session",
+   "selection_rank": 5,
+   "selection_score": 16,
+   "host_slot_count_strict": 16,
+   "host_term_capped": 12,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 4,
+   "n_user_turns": 24,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 4,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_15e38248",
+   "type": "multi-session",
+   "selection_rank": 6,
+   "selection_score": 16,
+   "host_slot_count_strict": 12,
+   "host_term_capped": 12,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 4,
+   "n_user_turns": 21,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8
+    ],
+    "3": [
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 6,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "c18a7dc8",
+   "type": "multi-session",
+   "selection_rank": 7,
+   "selection_score": 15,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 4,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 11,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_2ba83207",
+   "type": "multi-session",
+   "selection_rank": 8,
+   "selection_score": 15,
+   "host_slot_count_strict": 15,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 1,
+   "n_sessions": 4,
+   "n_user_turns": 24,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     0,
+     2,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 5,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "00ca467f",
+   "type": "multi-session",
+   "selection_rank": 9,
+   "selection_score": 14,
+   "host_slot_count_strict": 14,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": [],
+   "rubric_anchor_holdout": [
+    [
+     1,
+     6
+    ],
+    [
+     1,
+     10
+    ]
+   ]
+  },
+  {
+   "question_id": "1192316e",
+   "type": "multi-session",
+   "selection_rank": 10,
+   "selection_score": 14,
+   "host_slot_count_strict": 8,
+   "host_term_capped": 8,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 2,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "2788b940",
+   "type": "multi-session",
+   "selection_rank": 11,
+   "selection_score": 14,
+   "host_slot_count_strict": 12,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 4,
+   "n_user_turns": 21,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8
+    ],
+    "3": [
+     4,
+     6
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 7,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "2b8f3739",
+   "type": "multi-session",
+   "selection_rank": 12,
+   "selection_score": 14,
+   "host_slot_count_strict": 12,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "6cb6f249",
+   "type": "multi-session",
+   "selection_rank": 13,
+   "selection_score": 14,
+   "host_slot_count_strict": 8,
+   "host_term_capped": 8,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "81507db6",
+   "type": "multi-session",
+   "selection_rank": 14,
+   "selection_score": 14,
+   "host_slot_count_strict": 23,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 5,
+   "n_user_turns": 29,
+   "sessions_with_host_slots": 5,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "4": [
+     0,
+     2,
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "a08a253f",
+   "type": "multi-session",
+   "selection_rank": 15,
+   "selection_score": 14,
+   "host_slot_count_strict": 8,
+   "host_term_capped": 8,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "c4a1ceb8",
+   "type": "multi-session",
+   "selection_rank": 16,
+   "selection_score": 14,
+   "host_slot_count_strict": 15,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 2,
+   "n_sessions": 4,
+   "n_user_turns": 23,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 6,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "d851d5ba",
+   "type": "multi-session",
+   "selection_rank": 17,
+   "selection_score": 14,
+   "host_slot_count_strict": 13,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 4,
+   "n_user_turns": 22,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     0,
+     2
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "eeda8a6d",
+   "type": "multi-session",
+   "selection_rank": 18,
+   "selection_score": 14,
+   "host_slot_count_strict": 8,
+   "host_term_capped": 8,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 5,
+   "injection_horizon": "short_multi_day",
+   "quirks": [
+    "shares_sessions_with:eeda8a6d_abs"
+   ]
+  },
+  {
+   "question_id": "gpt4_ab202e7f",
+   "type": "multi-session",
+   "selection_rank": 19,
+   "selection_score": 14,
+   "host_slot_count_strict": 20,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 5,
+   "n_user_turns": 30,
+   "sessions_with_host_slots": 5,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "4": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "session_span_days": 7,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "1a8a66a6",
+   "type": "multi-session",
+   "selection_rank": 20,
+   "selection_score": 13,
+   "host_slot_count_strict": 16,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 1,
+   "n_sessions": 4,
+   "n_user_turns": 22,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     0,
+     2,
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "2ce6a0f2",
+   "type": "multi-session",
+   "selection_rank": 21,
+   "selection_score": 13,
+   "host_slot_count_strict": 14,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 1,
+   "n_sessions": 4,
+   "n_user_turns": 23,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "a1cc6108",
+   "type": "multi-session",
+   "selection_rank": 22,
+   "selection_score": 13,
+   "host_slot_count_strict": 5,
+   "host_term_capped": 5,
+   "natural_rows_clear": 4,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 10,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     6,
+     8
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_194be4b3",
+   "type": "multi-session",
+   "selection_rank": 23,
+   "selection_score": 13,
+   "host_slot_count_strict": 18,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 1,
+   "n_sessions": 5,
+   "n_user_turns": 27,
+   "sessions_with_host_slots": 5,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     0,
+     2,
+     10
+    ],
+    "3": [
+     4,
+     6
+    ],
+    "4": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "session_span_days": 4,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_2f91af09",
+   "type": "multi-session",
+   "selection_rank": 24,
+   "selection_score": 13,
+   "host_slot_count_strict": 11,
+   "host_term_capped": 11,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 17,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 4,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_731e37d7",
+   "type": "multi-session",
+   "selection_rank": 25,
+   "selection_score": 13,
+   "host_slot_count_strict": 15,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 1,
+   "n_sessions": 4,
+   "n_user_turns": 23,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_d12ceb0e",
+   "type": "multi-session",
+   "selection_rank": 26,
+   "selection_score": 13,
+   "host_slot_count_strict": 10,
+   "host_term_capped": 10,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 1,
+   "n_sessions": 3,
+   "n_user_turns": 16,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ],
+    "2": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 4,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "2318644b",
+   "type": "multi-session",
+   "selection_rank": 27,
+   "selection_score": 12,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 1,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 2,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "28dc39ac",
+   "type": "multi-session",
+   "selection_rank": 28,
+   "selection_score": 12,
+   "host_slot_count_strict": 19,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 0,
+   "n_sessions": 5,
+   "n_user_turns": 30,
+   "sessions_with_host_slots": 5,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "4": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "session_span_days": 8,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "2e6d26dc",
+   "type": "multi-session",
+   "selection_rank": 29,
+   "selection_score": 12,
+   "host_slot_count_strict": 16,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 0,
+   "n_sessions": 4,
+   "n_user_turns": 24,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "3a704032",
+   "type": "multi-session",
+   "selection_rank": 30,
+   "selection_score": 12,
+   "host_slot_count_strict": 12,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     0,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 2,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_d6585ce8",
+   "type": "temporal-reasoning",
+   "selection_rank": 31,
+   "selection_score": 20,
+   "host_slot_count_strict": 18,
+   "host_term_capped": 12,
+   "natural_rows_clear": 4,
+   "natural_rows_borderline": 0,
+   "n_sessions": 5,
+   "n_user_turns": 28,
+   "sessions_with_host_slots": 5,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "4": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "session_span_days": 28,
+   "injection_horizon": "multi_week",
+   "quirks": [
+    "shares_sessions_with:gpt4_d6585ce9"
+   ]
+  },
+  {
+   "question_id": "gpt4_7abb270c",
+   "type": "temporal-reasoning",
+   "selection_rank": 32,
+   "selection_score": 16,
+   "host_slot_count_strict": 17,
+   "host_term_capped": 12,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 6,
+   "n_user_turns": 30,
+   "sessions_with_host_slots": 6,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6
+    ],
+    "1": [
+     0,
+     2,
+     10
+    ],
+    "2": [
+     4,
+     6
+    ],
+    "3": [
+     4,
+     6,
+     8
+    ],
+    "4": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "5": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "session_span_days": 48,
+   "injection_horizon": "multi_week",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_93f6379c",
+   "type": "temporal-reasoning",
+   "selection_rank": 33,
+   "selection_score": 16,
+   "host_slot_count_strict": 14,
+   "host_term_capped": 12,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    0,
+    2
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "dcfa8644",
+   "type": "temporal-reasoning",
+   "selection_rank": 34,
+   "selection_score": 15,
+   "host_slot_count_strict": 8,
+   "host_term_capped": 8,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 1,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "0bc8ad93",
+   "type": "temporal-reasoning",
+   "selection_rank": 35,
+   "selection_score": 14,
+   "host_slot_count_strict": 15,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 17,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ],
+    "2": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 119,
+   "injection_horizon": "multi_week",
+   "quirks": [
+    "shares_sessions_with:0bc8ad92"
+   ]
+  },
+  {
+   "question_id": "gpt4_1916e0ea",
+   "type": "temporal-reasoning",
+   "selection_rank": 36,
+   "selection_score": 14,
+   "host_slot_count_strict": 6,
+   "host_term_capped": 6,
+   "natural_rows_clear": 4,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 11,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 54,
+   "injection_horizon": "multi_week",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_2655b836",
+   "type": "temporal-reasoning",
+   "selection_rank": 37,
+   "selection_score": 14,
+   "host_slot_count_strict": 13,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     6,
+     8,
+     10
+    ],
+    "2": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    2,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": [],
+   "rubric_anchor_holdout": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ]
+   ]
+  },
+  {
+   "question_id": "gpt4_2f56ae70",
+   "type": "temporal-reasoning",
+   "selection_rank": 38,
+   "selection_score": 14,
+   "host_slot_count_strict": 12,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    2,
+    0,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_a1b77f9c",
+   "type": "temporal-reasoning",
+   "selection_rank": 39,
+   "selection_score": 14,
+   "host_slot_count_strict": 22,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 6,
+   "n_user_turns": 36,
+   "sessions_with_host_slots": 6,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     0,
+     2,
+     10
+    ],
+    "3": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "4": [
+     0,
+     2,
+     4
+    ],
+    "5": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "session_span_days": 78,
+   "injection_horizon": "multi_week",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_e061b84f",
+   "type": "temporal-reasoning",
+   "selection_rank": 40,
+   "selection_score": 14,
+   "host_slot_count_strict": 12,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2
+   ],
+   "session_span_days": 15,
+   "injection_horizon": "multi_week",
+   "quirks": [
+    "shares_sessions_with:gpt4_e061b84g"
+   ]
+  },
+  {
+   "question_id": "gpt4_f420262d",
+   "type": "temporal-reasoning",
+   "selection_rank": 41,
+   "selection_score": 14,
+   "host_slot_count_strict": 23,
+   "host_term_capped": 12,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 5,
+   "n_user_turns": 29,
+   "sessions_with_host_slots": 5,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4,
+     6,
+     8
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     8,
+     10
+    ],
+    "4": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "session_span_days": 103,
+   "injection_horizon": "multi_week",
+   "quirks": [
+    "shares_sessions_with:gpt4_f420262c"
+   ]
+  },
+  {
+   "question_id": "4dfccbf8",
+   "type": "temporal-reasoning",
+   "selection_rank": 42,
+   "selection_score": 13,
+   "host_slot_count_strict": 9,
+   "host_term_capped": 9,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 24,
+   "injection_horizon": "multi_week",
+   "quirks": [
+    "shares_sessions_with:4dfccbf7"
+   ]
+  },
+  {
+   "question_id": "gpt4_2f584639",
+   "type": "temporal-reasoning",
+   "selection_rank": 43,
+   "selection_score": 13,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_4fc4f797",
+   "type": "temporal-reasoning",
+   "selection_rank": 44,
+   "selection_score": 13,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 11,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 37,
+   "injection_horizon": "multi_week",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_76048e76",
+   "type": "temporal-reasoning",
+   "selection_rank": 45,
+   "selection_score": 13,
+   "host_slot_count_strict": 8,
+   "host_term_capped": 8,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 3,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": [],
+   "rubric_anchor_holdout": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     1,
+     10
+    ]
+   ]
+  },
+  {
+   "question_id": "gpt4_9a159967",
+   "type": "temporal-reasoning",
+   "selection_rank": 46,
+   "selection_score": 13,
+   "host_slot_count_strict": 9,
+   "host_term_capped": 9,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 16,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    2,
+    0,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_d31cdae3",
+   "type": "temporal-reasoning",
+   "selection_rank": 47,
+   "selection_score": 13,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 11,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_e414231e",
+   "type": "temporal-reasoning",
+   "selection_rank": 48,
+   "selection_score": 13,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 3,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 11,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 4,
+   "injection_horizon": "short_multi_day",
+   "quirks": [
+    "shares_sessions_with:gpt4_e414231f"
+   ],
+   "rubric_anchor_holdout": [
+    [
+     1,
+     0
+    ]
+   ]
+  },
+  {
+   "question_id": "6613b389",
+   "type": "temporal-reasoning",
+   "selection_rank": 49,
+   "selection_score": 12,
+   "host_slot_count_strict": 14,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    2,
+    1,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "a3838d2b",
+   "type": "temporal-reasoning",
+   "selection_rank": 50,
+   "selection_score": 12,
+   "host_slot_count_strict": 22,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 0,
+   "n_sessions": 6,
+   "n_user_turns": 34,
+   "sessions_with_host_slots": 6,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     4,
+     6
+    ],
+    "4": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "5": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    4,
+    0,
+    2,
+    3,
+    5,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "b46e15ed",
+   "type": "temporal-reasoning",
+   "selection_rank": 51,
+   "selection_score": 12,
+   "host_slot_count_strict": 13,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 0,
+   "n_sessions": 4,
+   "n_user_turns": 24,
+   "sessions_with_host_slots": 4,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "session_span_days": 48,
+   "injection_horizon": "multi_week",
+   "quirks": [
+    "shares_sessions_with:b46e15ee"
+   ]
+  },
+  {
+   "question_id": "b9cfe692",
+   "type": "temporal-reasoning",
+   "selection_rank": 52,
+   "selection_score": 12,
+   "host_slot_count_strict": 14,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 0,
+   "n_sessions": 3,
+   "n_user_turns": 18,
+   "sessions_with_host_slots": 3,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "2": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    2,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "e4e14d04",
+   "type": "temporal-reasoning",
+   "selection_rank": 53,
+   "selection_score": 12,
+   "host_slot_count_strict": 8,
+   "host_term_capped": 8,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "gpt4_5dcc0aab",
+   "type": "temporal-reasoning",
+   "selection_rank": 54,
+   "selection_score": 12,
+   "host_slot_count_strict": 26,
+   "host_term_capped": 12,
+   "natural_rows_clear": 0,
+   "natural_rows_borderline": 0,
+   "n_sessions": 5,
+   "n_user_turns": 29,
+   "sessions_with_host_slots": 5,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     10
+    ],
+    "2": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "3": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "4": [
+     0,
+     2,
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    3,
+    1,
+    4,
+    0,
+    2
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": [],
+   "rubric_anchor_holdout": [
+    [
+     0,
+     6
+    ],
+    [
+     1,
+     6
+    ]
+   ]
+  },
+  {
+   "question_id": "gpt4_fa19884d",
+   "type": "temporal-reasoning",
+   "selection_rank": 55,
+   "selection_score": 12,
+   "host_slot_count_strict": 10,
+   "host_term_capped": 10,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     0,
+     2,
+     4,
+     6
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 6,
+   "injection_horizon": "short_multi_day",
+   "quirks": []
+  },
+  {
+   "question_id": "08f4fc43",
+   "type": "temporal-reasoning",
+   "selection_rank": 56,
+   "selection_score": 11,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 11,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": [],
+   "rubric_anchor_holdout": [
+    [
+     1,
+     0
+    ]
+   ]
+  },
+  {
+   "question_id": "2c63a862",
+   "type": "temporal-reasoning",
+   "selection_rank": 57,
+   "selection_score": 11,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     0,
+     2,
+     4
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "2ebe6c90",
+   "type": "temporal-reasoning",
+   "selection_rank": 58,
+   "selection_score": 11,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 11,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    0,
+    1
+   ],
+   "session_span_days": 21,
+   "injection_horizon": "multi_week",
+   "quirks": [
+    "shares_sessions_with:2ebe6c92"
+   ]
+  },
+  {
+   "question_id": "bbf86515",
+   "type": "temporal-reasoning",
+   "selection_rank": 59,
+   "selection_score": 11,
+   "host_slot_count_strict": 7,
+   "host_term_capped": 7,
+   "natural_rows_clear": 2,
+   "natural_rows_borderline": 0,
+   "n_sessions": 2,
+   "n_user_turns": 11,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": []
+  },
+  {
+   "question_id": "c8090214",
+   "type": "temporal-reasoning",
+   "selection_rank": 60,
+   "selection_score": 11,
+   "host_slot_count_strict": 8,
+   "host_term_capped": 8,
+   "natural_rows_clear": 1,
+   "natural_rows_borderline": 1,
+   "n_sessions": 2,
+   "n_user_turns": 12,
+   "sessions_with_host_slots": 2,
+   "host_slots_by_session": {
+    "0": [
+     4,
+     6,
+     8,
+     10
+    ],
+    "1": [
+     4,
+     6,
+     8,
+     10
+    ]
+   },
+   "chronological_session_order": [
+    1,
+    0
+   ],
+   "session_span_days": 0,
+   "injection_horizon": "same_day",
+   "quirks": [
+    "shares_sessions_with:c8090214_abs"
+   ]
+  }
+ ],
+ "natural_pair_keys": {
+  "authored": "2026-07-03, V2-F3(a) (design_review_v2.md BLOCKING-3); LME gold-schema author role B, fix pass",
+  "purpose": "Store keys for the 17 LME rows of research/natural_pairs_v2.jsonl (NAT-RES, V2-P9). One key per pair; store scope = per source question (s_cleaned haystack), as for all LME stores.",
+  "verification": "Every stage/resolution anchor was located in data/longmemeval/longmemeval_s_cleaned.json and the quoted text asserted verbatim (role=user checked); prior_mention_scan = keyword scan over ALL user turns before the stage anchor (script archived in the session scratchpad, output f3_out.txt). first_mention=true on 15/17; the 2 exceptions (P-LME-08, P-LME-14) carry the quoted prior assertion and a dual-branch labeling note per protocol_spec_v2.md section 4 (V2-F3).",
+  "labeling_contract": "STORELESS per protocol_spec_v2.md section 4 (V2-F3): no store replay; labels use rule 1.5d's no-stored-value branch (v1 section 2.1-B3 explicitly provides this branch when no prior value maps); exceptions dual-branch as flagged.",
+  "probe_question_rule": "identical to pilot/FM-4: generated from (entity, attribute) only; contains no candidate value string; checked before commit.",
+  "checker_horizon_user_turns": "user turns strictly after the stage anchor through the resolution anchor plus the 2-user-turn v1 section 3.4 sensitivity window, computed from the haystack; total 632 per extractor family (protocol_spec_v2.md section 7 row 15).",
+  "substrate_overlap_discipline": "the 4 pilot-substrate overlaps flagged in locomo_schema_notes.md section 6 (e493bb7c, 945e3d21, cc5ded98, ed4ddc30) are collision-audit test cases: the key mapper must never merge a pair key with the pilot key on the same question.",
+  "entries": [
+   {
+    "pair_id": "P-LME-01",
+    "question_id": "dccbc061",
+    "entity": "user",
+    "attribute": "running_shoes_model",
+    "attribute_class": "possession_item_model",
+    "staged_value": "a new pair of running shoes (model undetermined)",
+    "resolved_value": "Asics Gel-Kayano (bought February 10)",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 20,
+     "turn_idx": 10,
+     "quote": "I'm thinking of getting a new pair of running shoes to help with my recovery and training."
+    },
+    "resolution_evidence": {
+     "session_idx": 39,
+     "turn_idx": 4,
+     "quote": "I recently got a new pair of Asics Gel-Kayano shoes, which I've been wearing for all my runs since I bought them on February 10th."
+    },
+    "probe_question": "Which running shoes did the user most recently buy?",
+    "first_mention": true,
+    "prior_mention_scan": "two PRIOR SAME-KEY HEDGES, no asserted value: s8 t8 'I'm thinking of getting new running shoes soon'; s8 t10 'I've been eyeing the Brooks Ghost series for my next pair of running shoes, but I'm not sure when I'll get around to buying them.' No prior turn asserts an owned model, so rule 1.5d's no-stored-value branch applies; flagged because a plan-reframed E-M tuple from s8 t10 could map to this key ('Brooks Ghost' as considered value) - sensitivity note on the label.",
+    "substrate_overlap": null,
+    "flags": [
+     "prior_same_key_hedge_s8"
+    ],
+    "checker_horizon_user_turns": 95,
+    "notes": "Staged generic -> specific value. Excluded strings for any future injection sampling: Asics, Gel-Kayano, Brooks, Ghost."
+   },
+   {
+    "pair_id": "P-LME-02",
+    "question_id": "2318644b",
+    "entity": "user",
+    "attribute": "compost_purchase_status",
+    "attribute_class": "purchase_status",
+    "staged_value": "plans to buy compost for the raised bed",
+    "resolved_value": "bought a bag of compost from the local nursery (February 5)",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 14,
+     "turn_idx": 6,
+     "quote": "I'll probably need to buy some compost to fill the raised bed, do you have any recommendations on how to choose a good compost?"
+    },
+    "resolution_evidence": {
+     "session_idx": 14,
+     "turn_idx": 8,
+     "quote": "By the way, I recently bought a bag of compost from the local nursery on February 5th, and I'm planning to use it to prepare the soil for my herb garden."
+    },
+    "probe_question": "What is the current status of the user's compost purchase?",
+    "first_mention": true,
+    "prior_mention_scan": "clean (no prior mention of compost in any earlier user turn)",
+    "substrate_overlap": "2318644b is v2 aux-injection substrate rank 27; the NAT-RES storeless pass reads the s_cleaned haystack and is independent of that substrate's injection stream",
+    "flags": [],
+    "checker_horizon_user_turns": 3,
+    "notes": "Same-session resolution (s14 t6 -> t8)."
+   },
+   {
+    "pair_id": "P-LME-03",
+    "question_id": "gpt4_7a0daae1",
+    "entity": "user",
+    "attribute": "barcelona_accommodation",
+    "attribute_class": "location_choice",
+    "staged_value": "considering staying in the Eixample area",
+    "resolved_value": "hostel in Eixample, Barcelona (booked)",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 4,
+     "turn_idx": 2,
+     "quote": "I'm thinking of staying in the Eixample area since I've heard it's pretty central and has a lot of restaurants and cafes."
+    },
+    "resolution_evidence": {
+     "session_idx": 4,
+     "turn_idx": 10,
+     "quote": "I just booked a hostel in Eixample, Barcelona and I'm planning my trip."
+    },
+    "probe_question": "Where is the user staying for their trip to Barcelona?",
+    "first_mention": true,
+    "prior_mention_scan": "s0 t0 asks for eco-friendly accommodation recommendations in Barcelona (query, no asserted value) - no-stored-value branch holds",
+    "substrate_overlap": null,
+    "flags": [],
+    "checker_horizon_user_turns": 6,
+    "notes": "Staged value equals resolved area; resolution adds the concrete booking."
+   },
+   {
+    "pair_id": "P-LME-04",
+    "question_id": "4dfccbf7",
+    "entity": "user",
+    "attribute": "guitar_service_status",
+    "attribute_class": "task_status",
+    "staged_value": "thinking about getting the Taylor GS Mini serviced",
+    "resolved_value": "took the Taylor GS Mini to the guitar tech for servicing",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 35,
+     "turn_idx": 8,
+     "quote": "I've been thinking about getting my Taylor GS Mini serviced, as the action is a bit high and it's been causing some discomfort in my left hand."
+    },
+    "resolution_evidence": {
+     "session_idx": 38,
+     "turn_idx": 8,
+     "quote": "I decided to take my Taylor GS Mini, to the guitar tech for servicing today - the action's been a bit high and it's been causing some discomfort in my left hand."
+    },
+    "probe_question": "What is the current status of the user's guitar servicing?",
+    "first_mention": true,
+    "prior_mention_scan": "keyword hits are all irrelevant senses ('streaming service' etc.); no prior mention of guitar servicing",
+    "substrate_overlap": null,
+    "flags": [],
+    "checker_horizon_user_turns": 16,
+    "notes": "Near-verbatim rationale repeated at stage and resolution (corpus duplication style)."
+   },
+   {
+    "pair_id": "P-LME-05",
+    "question_id": "0977f2af",
+    "entity": "user",
+    "attribute": "winter_coat",
+    "attribute_class": "possession_item",
+    "staged_value": "might go for a puffer jacket this year",
+    "resolved_value": "puffer jacket from REI",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 32,
+     "turn_idx": 2,
+     "quote": "I think I might go for a puffer jacket this year."
+    },
+    "resolution_evidence": {
+     "session_idx": 32,
+     "turn_idx": 8,
+     "quote": "I ended up getting a great puffer jacket from REI, and it's kept me warm during the recent cold weather."
+    },
+    "probe_question": "What winter coat does the user currently have?",
+    "first_mention": true,
+    "prior_mention_scan": "s32 t0 asks a general style question ('Which styles of winter coats are typically worn by men versus women?') - no asserted value",
+    "substrate_overlap": "0977f2af is a v2 KU gold-key substrate (user/most_recent_kitchen_gadget_purchase); attributes are disjoint - collision-audit test case",
+    "flags": [],
+    "checker_horizon_user_turns": 5,
+    "notes": "Staged and resolved values share the string 'puffer jacket'; the resolution adds vendor. Same-session (s32)."
+   },
+   {
+    "pair_id": "P-LME-06",
+    "question_id": "cc5ded98",
+    "entity": "user",
+    "attribute": "roadtrip_stop_choice",
+    "attribute_class": "choice",
+    "staged_value": "deciding between the Badlands and the Black Hills",
+    "resolved_value": "the Badlands",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 12,
+     "turn_idx": 6,
+     "quote": "I've been thinking about my road trip out west, and I'm trying to decide between visiting the Badlands or the Black Hills on my way from Mount Rushmore to Yellowstone."
+    },
+    "resolution_evidence": {
+     "session_idx": 12,
+     "turn_idx": 10,
+     "quote": "Now that I've decided on the Badlands, I'm thinking about my accommodations for the night."
+    },
+    "probe_question": "Which stop did the user decide on for their road trip between Mount Rushmore and Yellowstone?",
+    "first_mention": true,
+    "prior_mention_scan": "clean",
+    "substrate_overlap": "cc5ded98 is a pilot alternate substrate (user/daily_coding_exercise_duration); attributes disjoint - collision-audit test case (locomo notes section 6 warning)",
+    "flags": [],
+    "checker_horizon_user_turns": 4,
+    "notes": "Resolution turn also opens a new accommodation deliberation (compound commit+stage)."
+   },
+   {
+    "pair_id": "P-LME-07",
+    "question_id": "e493bb7c",
+    "entity": "user",
+    "attribute": "moonlit_ocean_print_location",
+    "attribute_class": "location",
+    "staged_value": "plan to frame and hang in the bedroom (possibly temporarily in the party area)",
+    "resolved_value": "on the bedroom wall",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 8,
+     "turn_idx": 4,
+     "quote": "I have a beautiful digital print of \"Moonlit Ocean\" by Jack Harris that I plan to frame and hang in my bedroom, but I could temporarily move it to the party area to add some visual interest."
+    },
+    "resolution_evidence": {
+     "session_idx": 30,
+     "turn_idx": 0,
+     "quote": "By the way, I just rearranged my bedroom and I'm really loving how the \"Moonlit Ocean\" print looks on my wall, and I just moved the \"Ethereal Dreams\" painting to my bedroom, it adds a nice touch to the space."
+    },
+    "probe_question": "Where is the user's \"Moonlit Ocean\" print currently displayed?",
+    "first_mention": true,
+    "prior_mention_scan": "clean",
+    "substrate_overlap": "e493bb7c is a pilot CORE substrate (ethereal_dreams_painting/location); the resolution turn also moves the Ethereal Dreams painting (the pilot key's own transition) - the mapper MUST keep the two artwork keys distinct; primary collision-audit test case (locomo notes section 6 warning)",
+    "flags": [],
+    "checker_horizon_user_turns": 114,
+    "notes": "Long arc (s8 -> s30)."
+   },
+   {
+    "pair_id": "P-LME-08",
+    "question_id": "gpt4_93f6379c",
+    "entity": "user",
+    "attribute": "sneakers_new_pair",
+    "attribute_class": "possession_item_model",
+    "staged_value": "Vans Old Skool (considering)",
+    "resolved_value": "black Converse Chuck Taylor All Star",
+    "gold_action": "invalidate",
+    "stage_evidence": {
+     "session_idx": 24,
+     "turn_idx": 6,
+     "quote": "I've been thinking about getting a new pair of Vans Old Skool sneakers, they're having a sale and I've been wanting a pair of slip-on sneakers for ages."
+    },
+    "resolution_evidence": {
+     "session_idx": 24,
+     "turn_idx": 10,
+     "quote": "I got a pair of black Converse Chuck Taylor All Star sneakers, and I love how they go with my jeans and dresses."
+    },
+    "probe_question": "Which new pair of sneakers did the user most recently get?",
+    "first_mention": false,
+    "prior_mention_scan": "EXCEPTION - prior asserted value BEFORE the stage turn: s24 t0 'By the way, I've been wearing my new Converse a lot lately - they're so comfy!' asserts new-Converse possession two user turns before the stage. Labels for this pair are additionally computed under rule 1.5d's stored-value branch with that quoted assertion as the gold-sourced stored value (no replay); primary label stays the no-stored-value branch per the V2-F3 pin, divergence reported.",
+    "substrate_overlap": "gpt4_93f6379c is v2 aux-injection substrate rank 33; NAT-RES storeless pass independent of its injection stream",
+    "flags": [
+     "prior_value_before_stage"
+    ],
+    "checker_horizon_user_turns": 4,
+    "notes": "Invalidate: staged Vans value never realized (superseded_by_different_value); the Converse purchase commits as its own completed-event fact. The s24 t0 prior mention makes the resolution partially a restatement - gold action unchanged (staged value is Vans, which never resolves)."
+   },
+   {
+    "pair_id": "P-LME-09",
+    "question_id": "945e3d21",
+    "entity": "user",
+    "attribute": "news_subscription_status",
+    "attribute_class": "subscription_status",
+    "staged_value": "thinking about subscribing to online news publications or podcasts",
+    "resolved_value": "subscribed to The New Yorker (early February); canceled Forbes (early March)",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 24,
+     "turn_idx": 8,
+     "quote": "I've been thinking about subscribing to some online news publications or podcasts to stay up-to-date."
+    },
+    "resolution_evidence": {
+     "session_idx": 27,
+     "turn_idx": 0,
+     "quote": "By the way, I just canceled my Forbes magazine subscription in early March because I wasn't finding the articles that interesting, but I've been enjoying other publications like The New Yorker, which I subscribed to in early February."
+    },
+    "probe_question": "Which news publications does the user currently subscribe to?",
+    "first_mention": true,
+    "prior_mention_scan": "s24 t0 reports reading a New Yorker article (no subscription asserted) - no-stored-value branch holds",
+    "substrate_overlap": "945e3d21 is a pilot CORE substrate (user/yoga_class_frequency); attributes disjoint - collision-audit test case (locomo notes section 6 warning)",
+    "flags": [
+     "indirect_resolution"
+    ],
+    "checker_horizon_user_turns": 12,
+    "notes": "Partial resolution: subscriptions implied realized; Forbes cancellation is a separate completed event."
+   },
+   {
+    "pair_id": "P-LME-10",
+    "question_id": "94f70d80",
+    "entity": "user",
+    "attribute": "brunch_venue_choice",
+    "attribute_class": "choice",
+    "staged_value": "new place vs. the spot recently visited with parents (deliberating)",
+    "resolved_value": "the spot previously visited with parents (decision-leaning)",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 28,
+     "turn_idx": 2,
+     "quote": "I was thinking of trying out a new place, but now I'm considering going back to a spot I've been to recently with my parents."
+    },
+    "resolution_evidence": {
+     "session_idx": 28,
+     "turn_idx": 4,
+     "quote": "I think I'll go back to the spot I went with my parents."
+    },
+    "probe_question": "Which venue did the user choose for the weekend brunch get-together?",
+    "first_mention": true,
+    "prior_mention_scan": "earlier brunch mentions (s14 t4, s25 t4/t6, s28 t0) are queries or other occasions; none asserts a venue choice for this get-together",
+    "substrate_overlap": null,
+    "flags": [
+     "hedged_resolution_turn"
+    ],
+    "checker_horizon_user_turns": 3,
+    "notes": "Resolution turn itself hedged ('I think I'll') - resolution_strength=weak in the pairs file; borderline quality."
+   },
+   {
+    "pair_id": "P-LME-11",
+    "question_id": "e01b8e2f",
+    "entity": "user",
+    "attribute": "ipad_keyboard",
+    "attribute_class": "possession_item_model",
+    "staged_value": "thinking of getting a keyboard for the new iPad Air",
+    "resolved_value": "Zagg Rugged Book (plan-phrased choice)",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 7,
+     "turn_idx": 0,
+     "quote": "I'm thinking of getting a keyboard for my new iPad Air, which I just got on March 12th from the Apple Store."
+    },
+    "resolution_evidence": {
+     "session_idx": 7,
+     "turn_idx": 6,
+     "quote": "I'm planning to use the Zagg Rugged Book with my new iPad Air, which I bought on March 12th from the Apple Store."
+    },
+    "probe_question": "Which keyboard does the user use with their iPad Air?",
+    "first_mention": true,
+    "prior_mention_scan": "clean",
+    "substrate_overlap": null,
+    "flags": [
+     "plan_phrased_resolution"
+    ],
+    "checker_horizon_user_turns": 5,
+    "notes": "Resolution names the chosen value but stays plan-phrased; borderline."
+   },
+   {
+    "pair_id": "P-LME-12",
+    "question_id": "gpt4_e414231f",
+    "entity": "user",
+    "attribute": "webcam_model",
+    "attribute_class": "possession_item_model",
+    "staged_value": "Logitech C920 (considering)",
+    "resolved_value": "Logitech C920 (choice endorsed; purchase not asserted)",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 18,
+     "turn_idx": 2,
+     "quote": "I'm considering the Logitech C920 since it's affordable and has a wide-angle lens."
+    },
+    "resolution_evidence": {
+     "session_idx": 18,
+     "turn_idx": 8,
+     "quote": "I'm glad I got the thumbs up for the Logitech C920."
+    },
+    "probe_question": "Which webcam did the user choose?",
+    "first_mention": true,
+    "prior_mention_scan": "clean",
+    "substrate_overlap": null,
+    "flags": [
+     "approval_not_purchase"
+    ],
+    "checker_horizon_user_turns": 5,
+    "notes": "Distinct question from aux substrate gpt4_e414231e (one-character qid difference; do not conflate)."
+   },
+   {
+    "pair_id": "P-LME-13",
+    "question_id": "gpt4_76048e76",
+    "entity": "user",
+    "attribute": "paris_day_trip_status",
+    "attribute_class": "trip_status",
+    "staged_value": "thinking of a day trip to Paris during the 10-day London stay",
+    "resolved_value": "Paris trip in March booked with Travel-X (in January); still being finalized",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 13,
+     "turn_idx": 4,
+     "quote": "Since I'll be in London for 10 days, I'm thinking of taking a day trip to Paris."
+    },
+    "resolution_evidence": {
+     "session_idx": 43,
+     "turn_idx": 0,
+     "quote": "By the way, I'm still finalizing my Paris trip in March, which I booked with Travel-X back in January."
+    },
+    "probe_question": "What is the current status of the user's Paris trip?",
+    "first_mention": true,
+    "prior_mention_scan": "clean (no Paris mention before the stage turn)",
+    "substrate_overlap": "gpt4_76048e76 is v2 aux-injection substrate rank 45 and carries rubric-anchor holdouts (s0 t0, s1 t2, s1 t10 - oracle-session anchors, distinct from these haystack anchors); Test-1 eval items from this question respect the ID holdout",
+    "flags": [
+     "rubric_example_source_question"
+    ],
+    "checker_horizon_user_turns": 156,
+    "notes": "Longest LME pair arc (s13 -> s43)."
+   },
+   {
+    "pair_id": "P-LME-14",
+    "question_id": "gpt4_78cf46a3",
+    "entity": "user",
+    "attribute": "yoga_class_enrollment",
+    "attribute_class": "enrollment_status",
+    "staged_value": "considering a restorative yoga workshop with Rachel",
+    "resolved_value": "signed up for a yoga class at the local recreation center (March 15)",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 9,
+     "turn_idx": 8,
+     "quote": "I've been thinking about trying out some restorative yoga classes, and I came across a restorative yoga workshop with Rachel, which sounds amazing."
+    },
+    "resolution_evidence": {
+     "session_idx": 37,
+     "turn_idx": 0,
+     "quote": "By the way, I started taking fitness classes at the local recreation center about 3 months ago, and I'm really enjoying it - I signed up for a yoga class on March 15th."
+    },
+    "probe_question": "Which yoga class, if any, is the user currently signed up for?",
+    "first_mention": false,
+    "prior_mention_scan": "EXCEPTION - prior asserted value BEFORE the stage turn: s9 t2 'I've been noticing a lot of improvement in my flexibility since I started taking yoga classes three months ago, especially in my hamstrings.' asserts an existing yoga-class enrollment three user turns before the stage (same session also mentions 'my Vinyasa flow classes'). Labels additionally computed under the stored-value branch with that quoted assertion as the gold-sourced stored value (no replay); primary label stays the no-stored-value branch per the V2-F3 pin, divergence reported.",
+    "substrate_overlap": null,
+    "flags": [
+     "prior_value_before_stage",
+     "loose_value_match"
+    ],
+    "checker_horizon_user_turns": 137,
+    "notes": "Resolution realizes the activity but not the specific workshop (resolution_strength=partial in the pairs file)."
+   },
+   {
+    "pair_id": "P-LME-15",
+    "question_id": "ed4ddc30",
+    "entity": "user",
+    "attribute": "wireless_charging_pad_ownership",
+    "attribute_class": "possession_status",
+    "staged_value": "thinking of getting a wireless charging pad",
+    "resolved_value": "already owns one (from Target, ~$15, bought a few weeks prior)",
+    "gold_action": "invalidate",
+    "stage_evidence": {
+     "session_idx": 14,
+     "turn_idx": 8,
+     "quote": "I've been thinking of getting a wireless charging pad to complement my power bank."
+    },
+    "resolution_evidence": {
+     "session_idx": 14,
+     "turn_idx": 10,
+     "quote": "I actually already have a wireless charging pad from Target that I bought for $15 a few weeks ago, and it's been super convenient to just drop my phone or watch on it when I get home."
+    },
+    "probe_question": "Does the user own a wireless charging pad, and where did they get it?",
+    "first_mention": true,
+    "prior_mention_scan": "clean - the pre-existing ownership is first ASSERTED at the resolution turn itself; no earlier haystack turn mentions the pad, so the staged item is the key's first mention",
+    "substrate_overlap": "ed4ddc30 is a pilot alternate substrate (household/eggs_stocked_dozen_count); attributes disjoint - collision-audit test case (locomo notes section 6 warning)",
+    "flags": [],
+    "checker_horizon_user_turns": 3,
+    "notes": "already_owned_moots_plan: the plan invalidates; ownership commits as an observed fact."
+   },
+   {
+    "pair_id": "P-LME-16",
+    "question_id": "8464fc84",
+    "entity": "user",
+    "attribute": "wireless_charging_pad_ownership",
+    "attribute_class": "possession_status",
+    "staged_value": "thinking about getting a wireless charging pad ('like the one I mentioned earlier')",
+    "resolved_value": "already bought one (~a month prior)",
+    "gold_action": "invalidate",
+    "stage_evidence": {
+     "session_idx": 29,
+     "turn_idx": 4,
+     "quote": "I've also been thinking about getting a wireless charging pad, like the one I mentioned earlier."
+    },
+    "resolution_evidence": {
+     "session_idx": 29,
+     "turn_idx": 6,
+     "quote": "I actually did mention that I bought a wireless charging pad about a month ago, and it's been a game-changer, especially at night when I just plop my phone down on the pad and let it charge while I sleep."
+    },
+    "probe_question": "Does the user currently own a wireless charging pad?",
+    "first_mention": true,
+    "prior_mention_scan": "clean MECHANICALLY, with a corpus incoherence: both turns back-reference an earlier mention that does NOT exist in this haystack (keyword scan over all prior user turns: zero hits). First-mention therefore holds corpus-internally; flagged.",
+    "substrate_overlap": null,
+    "flags": [
+     "corpus_incoherent_back_reference"
+    ],
+    "checker_horizon_user_turns": 3,
+    "notes": "Same pattern as P-LME-15 in a different question/store; the two entries are separate keys (per-substrate stores)."
+   },
+   {
+    "pair_id": "P-LME-17",
+    "question_id": "2133c1b5_abs",
+    "entity": "user",
+    "attribute": "europe_trip_status",
+    "attribute_class": "trip_status",
+    "staged_value": "thinking of planning a trip to Europe (possibly Italy or Spain)",
+    "resolved_value": "Europe trip upcoming; travel adapter ordered and received",
+    "gold_action": "promote",
+    "stage_evidence": {
+     "session_idx": 13,
+     "turn_idx": 0,
+     "quote": "I'm thinking of planning a trip to Europe, possibly to Italy or Spain, and I was wondering if you could recommend some popular destinations and itineraries."
+    },
+    "resolution_evidence": {
+     "session_idx": 26,
+     "turn_idx": 10,
+     "quote": "I've got a trip to Europe coming up and I just received my travel adapter for Europe, which I ordered from Amazon two weeks ago."
+    },
+    "probe_question": "What is the current status of the user's trip to Europe?",
+    "first_mention": true,
+    "prior_mention_scan": "clean",
+    "substrate_overlap": "source question is an _abs (abstention) question; this pair key is NOT the abstention key and the storeless pass injects nothing, so the abstention gold is undisturbed",
+    "flags": [
+     "indirect_resolution"
+    ],
+    "checker_horizon_user_turns": 61,
+    "notes": "Partial: commitment evidence concrete, destination country unresolved."
+   }
+  ]
+ }
+}

@@ -1,0 +1,55 @@
+{
+ "n": 333,
+ "note": "EXPLORATORY post-hoc analysis, not preregistered",
+ "all": {
+  "n": 333,
+  "auc_commitconf_dedicated": 0.8242622950819672,
+  "auc_ev": 0.9751730418943534,
+  "auc_conf_extraction_embedded": 0.837632058287796,
+  "delta_ev_minus_commitconf": {
+   "delta": 0.15091074681238614,
+   "lo": 0.11500793036766073,
+   "hi": 0.18981959651432725
+  }
+ },
+ "natural": {
+  "n": 163,
+  "auc_commitconf_dedicated": 0.6211835334476844,
+  "auc_ev": 0.9283876500857633,
+  "auc_conf_extraction_embedded": 0.6933962264150944,
+  "delta_ev_minus_commitconf": {
+   "delta": 0.3072041166380789,
+   "lo": 0.22930445250530115,
+   "hi": 0.3889880631330052
+  }
+ },
+ "injected": {
+  "n": 170,
+  "auc_commitconf_dedicated": 0.9805112272277927,
+  "auc_ev": 1.0,
+  "auc_conf_extraction_embedded": 0.9292472814574213,
+  "delta_ev_minus_commitconf": {
+   "delta": 0.019488772772207286,
+   "lo": 0.0035713785794272783,
+   "hi": 0.04117452091872457
+  }
+ },
+ "commitconf_by_gold_class": {
+  "speculative": {
+   "n": 101,
+   "median": 0.25
+  },
+  "completed_event": {
+   "n": 85,
+   "median": 0.95
+  },
+  "explicit_correction": {
+   "n": 65,
+   "median": 0.98
+  },
+  "other": {
+   "n": 82,
+   "median": 0.95
+  }
+ }
+}

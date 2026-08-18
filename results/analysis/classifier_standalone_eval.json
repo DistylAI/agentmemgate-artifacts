@@ -1,0 +1,285 @@
+{
+ "endpoint": "standalone per-class precision/recall of the frozen statement classifier on the adjudicated natural set",
+ "n": 163,
+ "classes": [
+  "speculative",
+  "completed_event",
+  "explicit_correction",
+  "other"
+ ],
+ "confusion_matrix_gold_rows_argmax_cols": {
+  "speculative": {
+   "speculative": 37,
+   "completed_event": 3,
+   "explicit_correction": 0,
+   "other": 2
+  },
+  "completed_event": {
+   "speculative": 0,
+   "completed_event": 46,
+   "explicit_correction": 0,
+   "other": 2
+  },
+  "explicit_correction": {
+   "speculative": 0,
+   "completed_event": 3,
+   "explicit_correction": 2,
+   "other": 0
+  },
+  "other": {
+   "speculative": 3,
+   "completed_event": 35,
+   "explicit_correction": 1,
+   "other": 29
+  }
+ },
+ "per_class": {
+  "speculative": {
+   "support": 42,
+   "predicted": 40,
+   "precision": {
+    "x": 37,
+    "n": 40,
+    "point": 0.925,
+    "wilson_lo": 0.8013546984090248,
+    "wilson_hi": 0.9741644432281419
+   },
+   "recall": {
+    "x": 37,
+    "n": 42,
+    "point": 0.8809523809523809,
+    "wilson_lo": 0.7499931819289245,
+    "wilson_hi": 0.9480627323498092
+   },
+   "f1": 0.9024390243902439
+  },
+  "completed_event": {
+   "support": 48,
+   "predicted": 87,
+   "precision": {
+    "x": 46,
+    "n": 87,
+    "point": 0.5287356321839081,
+    "wilson_lo": 0.4248617443382648,
+    "wilson_hi": 0.6301791179979336
+   },
+   "recall": {
+    "x": 46,
+    "n": 48,
+    "point": 0.9583333333333334,
+    "wilson_lo": 0.8602408885222853,
+    "wilson_hi": 0.9884983479210344
+   },
+   "f1": 0.6814814814814815
+  },
+  "explicit_correction": {
+   "support": 5,
+   "predicted": 3,
+   "precision": {
+    "x": 2,
+    "n": 3,
+    "point": 0.6666666666666666,
+    "wilson_lo": 0.20765495512648796,
+    "wilson_hi": 0.9385096847238394
+   },
+   "recall": {
+    "x": 2,
+    "n": 5,
+    "point": 0.4,
+    "wilson_lo": 0.1176182311592533,
+    "wilson_hi": 0.769280067791163
+   },
+   "f1": 0.5
+  },
+  "other": {
+   "support": 68,
+   "predicted": 33,
+   "precision": {
+    "x": 29,
+    "n": 33,
+    "point": 0.8787878787878788,
+    "wilson_lo": 0.7267415674973484,
+    "wilson_hi": 0.9518391673241576
+   },
+   "recall": {
+    "x": 29,
+    "n": 68,
+    "point": 0.4264705882352941,
+    "wilson_lo": 0.31597057562082875,
+    "wilson_hi": 0.5448343062303549
+   },
+   "f1": 0.5742574257425742
+  }
+ },
+ "overall_accuracy": {
+  "x": 114,
+  "n": 163,
+  "point": 0.6993865030674846,
+  "wilson_lo": 0.6250670728683696,
+  "wilson_hi": 0.7645240123286077
+ },
+ "binary_should_update_argmax": {
+  "positive_classes": [
+   "completed_event",
+   "explicit_correction"
+  ],
+  "confusion": {
+   "tp": 51,
+   "fp": 39,
+   "fn": 2,
+   "tn": 71
+  },
+  "precision": {
+   "x": 51,
+   "n": 90,
+   "point": 0.5666666666666667,
+   "wilson_lo": 0.4636391101764269,
+   "wilson_hi": 0.664235947367349
+  },
+  "recall": {
+   "x": 51,
+   "n": 53,
+   "point": 0.9622641509433962,
+   "wilson_lo": 0.8724547684904087,
+   "wilson_hi": 0.9895899311661807
+  },
+  "f1": 0.7132867132867133,
+  "accuracy": {
+   "x": 122,
+   "n": 163,
+   "point": 0.7484662576687117,
+   "wilson_lo": 0.6766573768275054,
+   "wilson_hi": 0.8088330524179587
+  },
+  "false_positive_rate": {
+   "x": 39,
+   "n": 110,
+   "point": 0.35454545454545455,
+   "wilson_lo": 0.2714400375949107,
+   "wilson_hi": 0.4474676376310173
+  }
+ },
+ "reconciliation_with_released_0_93": {
+  "released_auc_ev_natural": 0.9283876500857633,
+  "recomputed_auc_ev": 0.9283876500857633,
+  "released_auc_conf_natural": 0.6933962264150944,
+  "recomputed_auc_conf": 0.6933962264150944,
+  "released_auc_commitconf_dedicated": 0.6211835334476844,
+  "n_released": 163,
+  "per_class_recall_matches_released": true,
+  "note": "The released 0.93 is the Mann-Whitney AUC of s_ev = P(completed_event)+P(explicit_correction) ranking the binary should-update label (gold in COMMIT_CLASSES) over these same 163 statements and the same frozen classifier outputs; 0.69 is the same AUC for the extraction-embedded confidence and 0.62 for the dedicated commit-confidence probe (exploratory file). The confusion matrix here is the HARD argmax view of the same outputs; its per-class recall diagonal equals the released natural per_class_recall entries exactly."
+ },
+ "confident_plan_slice": {
+  "granularity_note": "The natural-set adjudication is KIND-level (4 classes) plus rubric edge-case flags (a)-(g); it does NOT carry the planted-probe hedge taxonomy (strong hedge / weak hedge / confident plan / scheduled with date), so a confident-plan/DATELESS slice cannot be formed from these labels. The closest supported granularity is rubric flag (a): 'planned-but-not-completed events with high certainty' — the natural analog of a confident plan; flag (b) (scheduled events stated as fact) is the closest dated analog but its gold tuple is 'other' by construction, so it is reported descriptively only.",
+  "flag_a_high_certainty_plan": {
+   "n": 12,
+   "gold_counts": {
+    "speculative": 9,
+    "other": 3
+   },
+   "argmax_counts": {
+    "speculative": 11,
+    "other": 1
+   },
+   "accuracy": {
+    "x": 8,
+    "n": 12,
+    "point": 0.6666666666666666,
+    "wilson_lo": 0.3906175873976138,
+    "wilson_hi": 0.8618821601026385
+   },
+   "item_ids": [
+    "nat-oracle-41698283-s0-t6",
+    "nat-oracle-6a1eabeb-s0-t8",
+    "nat-oracle-852ce960-s1-t0",
+    "nat-oracle-89941a93-s1-t4",
+    "nat-oracle-a4996e51-s0-t0",
+    "nat-oracle-b01defab-s0-t2",
+    "nat-oracle-eace081b-s1-t2",
+    "nat-oracle-gpt4_4929293a-s0-t0",
+    "nat-s_cleaned-66f24dbb-s24-t0",
+    "nat-s_cleaned-94f70d80-s11-t2",
+    "nat-s_cleaned-a96c20ee-s28-t2",
+    "nat-s_cleaned-gpt4_e05b82a6-s7-t2"
+   ]
+  },
+  "flag_a_gold_speculative": {
+   "n": 9,
+   "gold_counts": {
+    "speculative": 9
+   },
+   "argmax_counts": {
+    "speculative": 8,
+    "other": 1
+   },
+   "accuracy": {
+    "x": 8,
+    "n": 9,
+    "point": 0.8888888888888888,
+    "wilson_lo": 0.5649937852319399,
+    "wilson_hi": 0.9801096286728695
+   },
+   "item_ids": [
+    "nat-oracle-41698283-s0-t6",
+    "nat-oracle-6a1eabeb-s0-t8",
+    "nat-oracle-89941a93-s1-t4",
+    "nat-oracle-a4996e51-s0-t0",
+    "nat-oracle-gpt4_4929293a-s0-t0",
+    "nat-s_cleaned-66f24dbb-s24-t0",
+    "nat-s_cleaned-94f70d80-s11-t2",
+    "nat-s_cleaned-a96c20ee-s28-t2",
+    "nat-s_cleaned-gpt4_e05b82a6-s7-t2"
+   ],
+   "recall_speculative": {
+    "x": 8,
+    "n": 9,
+    "point": 0.8888888888888888,
+    "wilson_lo": 0.5649937852319399,
+    "wilson_hi": 0.9801096286728695
+   },
+   "wrongly_committed": {
+    "x": 0,
+    "n": 9,
+    "point": 0.0,
+    "wilson_lo": 0.0,
+    "wilson_hi": 0.2991527535509594
+   },
+   "wrongly_committed_ids": []
+  },
+  "flag_b_scheduled_stated_as_fact": {
+   "n": 8,
+   "gold_counts": {
+    "other": 8
+   },
+   "argmax_counts": {
+    "other": 8
+   },
+   "accuracy": {
+    "x": 8,
+    "n": 8,
+    "point": 1.0,
+    "wilson_lo": 0.6755843804891231,
+    "wilson_hi": 1.0
+   },
+   "item_ids": [
+    "nat-oracle-6613b389-s2-t0",
+    "nat-oracle-8077ef71-s0-t2",
+    "nat-oracle-dfde3500-s1-t2",
+    "nat-s_cleaned-d905b33f-s0-t2",
+    "nat-s_cleaned-d905b33f-s42-t6",
+    "nat-s_cleaned-eace081b-s13-t2",
+    "nat-s_cleaned-gpt4_2c50253f-s32-t0",
+    "nat-s_cleaned-gpt4_a2d1d1f6-s12-t2"
+   ]
+  }
+ },
+ "methods": {
+  "statements": "natural stratum (provenance == 'natural') of the frozen v1 Test-1 eval set, results/test1/eval_items.jsonl (n = 163; unmodified statements harvested from LongMemEval and LoCoMo conversations) — the exact statement set behind team_snapshot.html Result 5",
+  "label_provenance": "gold = v1 labeling pipeline finalized labels: 3 rubric-guided labeler calls (frozen prompts/labeler_rubric.txt) with 2/3 vote; escalations adjudicated blind by a Claude-family adjudicator (results/labels/natural_gold.jsonl + results/labels/adjudications.jsonl). Re-derived here via label.finalize_label and asserted identical to eval_items.jsonl gold for all 163 items; 3 of 163 resolved by adjudication, the rest by vote. Gold is arm-independent of the classifier under test.",
+  "output_provenance": "classifier outputs = the per-statement 'classifier' block frozen into results/test1/eval_items.jsonl at the v1 Test-1 run (frozen prompts/classifier_short.txt; model gpt-5.5-2026-04-23, seed 20260702). No re-derivation from results/cache was needed: released rows store the full per-statement class distribution.",
+  "fresh_llm_calls": 0,
+  "cached_llm_calls_replayed": 0,
+  "ci": "95% Wilson score intervals (stats.wilson_ci) on recall and precision proportions",
+  "auc": "stats.mann_whitney_auc (midranks), identical to the released computation (eval_classifier.compute_metrics)"
+ }
+}
