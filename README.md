@@ -83,4 +83,4 @@ per conversation). Both are implemented in `src/memory_gating/stats.py`.
 ## License
 
 Code and the constructed datasets are released under CC BY 4.0 upon publication. The LoCoMo
-payload retains its upstream license.
+payload is redistributed unmodified under its upstream CC BY-NC 4.0 license.
